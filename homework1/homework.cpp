@@ -48,17 +48,22 @@ int main(int argc, char** argv) {
     FASTA_readset fasta(filePath);
 
     if (problem == "1") {
-
         fasta.initMillionData();
+        cout << "/////////////////////////////////////////////////////" << endl;
         fasta.printData();
 
     } else if (problem == "2") {
         fasta.totalUniqueSequenceFragments();
     } else if (problem == "3") {
-        fasta.initMillionData();
+        fasta.initFullData();
+        cout << "/////////////////////////////////////////////////////" << endl;
         fasta.getAllStatistics();
     } else if (problem == "4") {
+        fasta.initFullData();
     } else if (problem == "5") {
+        fasta.initFullData();
+        cout << "/////////////////////////////////////////////////////" << endl;
+        fasta.sortSequenceRead();
     } else {
         cout << "[Error] Invalid Option number." << endl;
     }

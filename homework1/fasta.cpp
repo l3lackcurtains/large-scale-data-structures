@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <string.h>
 
+#include <ctime>
 #include <fstream>
 #include <iostream>
 
@@ -18,15 +20,20 @@ class FASTA_readset {
     char** headerNumber;
     char** header;
     char** read;
+    bool arrayInitalized = true;
 
    public:
+    FASTA_readset() {
+        datasetCount = 15;
+    }
+
     FASTA_readset(string path) {
         filePath = path;
         datasetCount = 15;
     }
 
-    void readFile(int readLength) {
-        input.open(filePath);
+    void readFile(string path, int readLength) {
+        input.open(path);
         int a, b, i, j;
 
         char* tempHeader = new char[1000];
@@ -74,14 +81,44 @@ class FASTA_readset {
         }
     }
 
+    void readFile(int readLength) {
+        readFile(filePath, readLength);
+    }
+
     void initMillionData() {
-        // datasetCount = 10000000;
+        clock_t startTime, endTime;
+        float totalTime = 0.0;
+        startTime = clock();
+
+        /////////////////////////////////////////////////////
+        datasetCount = 10000000;
         readFile(datasetCount);
+        /////////////////////////////////////////////////////
+
+        endTime = clock();
+        totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+        cout << "#####################################################" << endl;
+        printf("Time to read 1 million data: %3.3f seconds. \n", totalTime);
+        ;
+        cout << "#####################################################" << endl;
     }
 
     void initFullData() {
-        datasetCount = 36000000;
+        clock_t startTime, endTime;
+        float totalTime = 0.0;
+        startTime = clock();
+
+        /////////////////////////////////////////////////////
+        // datasetCount = 36000000;
         readFile(datasetCount);
+        /////////////////////////////////////////////////////
+
+        endTime = clock();
+        totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+        cout << "#####################################################" << endl;
+        printf("Time to read 36 million data: %3.3f seconds. \n", totalTime);
+        ;
+        cout << "#####################################################" << endl;
     }
 
     void printData() {
@@ -92,20 +129,22 @@ class FASTA_readset {
     }
 
     void totalUniqueSequenceFragments() {
+        arrayInitalized = false;
+
         int totalSequence = 0;
         int lineCounter = 1;
         string line;
+        ifstream uniqueInput;
+        uniqueInput.open(filePath);
 
-        input.open(filePath);
-
-        while (getline(input, line)) {
+        while (getline(uniqueInput, line)) {
             if ((lineCounter % 2) == 0) {
                 totalSequence++;
             }
             lineCounter++;
         }
 
-        input.close();
+        uniqueInput.close();
 
         cout << "Total unique sequence fragments: " << totalSequence << endl;
     }
@@ -176,18 +215,95 @@ class FASTA_readset {
         totalCharacterCounts();
     }
 
-    void removeDatasetArrayAllocations() {
-        for (int i = 0; i < datasetCount; i++) {
-            delete[] read[i];
-            delete[] header[i];
+    void swap(char* stringData[], int i, int j) {
+        char* temp;
+        temp = stringData[i];
+        stringData[i] = stringData[j];
+        stringData[j] = temp;
+    }
+
+    void quickSort(char* stringData[], int left, int right) {
+        if (left >= right) {
+            return;
         }
-        delete[] read;
-        delete[] header;
-        cout << "Deallocated the memory storing data.";
+        swap(stringData, left, (left + right) / 2);
+        int last = left;
+
+        for (int i = left + 1; i <= right; i++) {
+            if (strcmp(stringData[i], stringData[left]) < 0) {
+                swap(stringData, ++last, i);
+            }
+        }
+        swap(stringData, left, last);
+        quickSort(stringData, left, last - 1);
+        quickSort(stringData, last + 1, right);
+    }
+
+    void sortSequenceRead() {
+        clock_t startTime, endTime;
+        float totalTime = 0.0;
+        startTime = clock();
+
+        ////////////////////////////////////////////////
+        char** temp = new char*[datasetCount];
+        for (int i = 0; i < datasetCount; i++) {
+            temp[i] = read[i];
+        }
+
+        quickSort(temp, 0, datasetCount - 1);
+
+        char** sortedRead = new char*[datasetCount];
+        for (int i = 0; i < datasetCount; i++) {
+            sortedRead[i] = new char[SEQUENCE_LENGTH];
+            strcpy(sortedRead[i], temp[i]);
+        }
+
+        cout << "First 10 lines after sorting are as follows:"
+             << endl;
+        for (int i = 0; i < 10; i++) {
+            cout << sortedRead[i] << endl;
+        }
+
+        for (int i = 0; i < datasetCount; i++) {
+            delete[] sortedRead[i];
+            delete[] temp[i];
+        }
+        delete[] sortedRead;
+        delete[] temp;
+
+        //////////////////////////////////////////////////////////
+        endTime = clock();
+        totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+        cout << "#####################################################" << endl;
+        printf("Time to sort genomic sequence: %3.3f seconds. \n", totalTime);
+        ;
+        cout << "#####################################################" << endl;
     }
 
     ~FASTA_readset() {
-        removeDatasetArrayAllocations();
-    }
+        clock_t startTime, endTime;
+        float totalTime = 0.0;
+        startTime = clock();
+        if (arrayInitalized) {
+            for (int i = 0; i < datasetCount; i++) {
+                delete[] read[i];
+                delete[] header[i];
+                delete[] headerNumber[i];
+            }
+            delete[] read;
+            delete[] header;
+            delete[] headerNumber;
+        }
 
+        if (input.is_open()) {
+            input.close();
+        }
+        cout << "Deallocated all array memory." << endl;
+        endTime = clock();
+        totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+        cout << "#####################################################" << endl;
+        printf("Time to Deallocate memory: %3.3f seconds. \n", totalTime);
+        ;
+        cout << "#####################################################" << endl;
+    }
 };

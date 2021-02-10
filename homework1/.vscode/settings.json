@@ -3,6 +3,8 @@
     "*.rmd": "markdown",
     "iosfwd": "cpp",
     "iostream": "cpp",
-    "new": "cpp"
+    "new": "cpp",
+    "ostream": "cpp",
+    "fstream": "cpp"
   }
 }
