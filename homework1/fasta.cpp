@@ -14,22 +14,19 @@ using namespace std;
 class FASTA_readset {
    private:
     int datasetCount;
-    int headerLength;
     string filePath;
     ifstream input;
     char** headerNumber;
-    char** header;
     char** read;
-    bool arrayInitalized = true;
 
    public:
     FASTA_readset() {
-        datasetCount = 15;
+        datasetCount = 36000000;
     }
 
     FASTA_readset(string path) {
         filePath = path;
-        datasetCount = 15;
+        datasetCount = 36000000;
     }
 
     void readFile(string path, int readLength) {
@@ -39,45 +36,38 @@ class FASTA_readset {
         char* tempHeader = new char[1000];
         int tempSequenceLength = 0;
 
-        header = (char**)malloc(sizeof(char*) * readLength);
         headerNumber = (char**)malloc(sizeof(char*) * readLength);
         read = (char**)malloc(sizeof(char*) * readLength);
 
+        int headerLength;
         for (int i = 0; i < readLength; i++) {
             read[i] = (char*)malloc(sizeof(char) * 1000);
-            header[i] = (char*)malloc(sizeof(char) * 1000);
             headerNumber[i] = (char*)malloc(sizeof(char) * 1000);
 
-            input >> tempHeader;  //read in the header line
-            input >> read[i];     //read in the read line
+            input >> tempHeader;
+            input >> read[i];
 
-            // Lets figure out how long the header is
             headerLength = 0;
-            while (tempHeader[headerLength] != '\0') {  // '\0' is a special end-of-string character
+            while (tempHeader[headerLength] != '\0') {
                 headerLength++;
             }
 
-            // pull out the read number... may want to make this into a function... you'll be doing this
-            // a lot for the parsing out the read count numbers from the header string
-
-            a = 2;  //third letter in header... we are assuming the first two are ">R"... may be good to double check
+            a = 2;
             b = a;
 
             while (tempHeader[b] != '_' && b < headerLength) {
                 b++;
             }
-            // by this point we either found the delimiter "_" or we ran off the end of the header
-            if (b == headerLength) {  // something went wrong
+
+            if (b == headerLength) {
                 cout << "Error: exhausted header string looking for read number... exiting" << endl;
                 exit(-1);
             } else {
-                for (j = a; j < b; j++) {  //copy of the read number to a new string
+                for (j = a; j < b; j++) {
                     headerNumber[i][j - a] = tempHeader[j];
                 }
-                headerNumber[i][j] = '\0';  // top of the read number with the end-of-string special character
+                headerNumber[i][j] = '\0';
             }
-
-            header[i] = tempHeader;
         }
     }
 
@@ -109,7 +99,6 @@ class FASTA_readset {
         startTime = clock();
 
         /////////////////////////////////////////////////////
-        // datasetCount = 36000000;
         readFile(datasetCount);
         /////////////////////////////////////////////////////
 
@@ -129,8 +118,6 @@ class FASTA_readset {
     }
 
     void totalUniqueSequenceFragments() {
-        arrayInitalized = false;
-
         int totalSequence = 0;
         int lineCounter = 1;
         string line;
@@ -147,32 +134,49 @@ class FASTA_readset {
         uniqueInput.close();
 
         cout << "Total unique sequence fragments: " << totalSequence << endl;
+
+        datasetCount = totalSequence;
     }
 
     void allDatasetTotalUniqueSequenceFragments() {
+        ifstream uniqueInput;
+        uniqueInput.open(filePath);
+
         int totalDatasets[ALL_DATASETS_COUNT];
         for (int x = 0; x < ALL_DATASETS_COUNT; x++) {
             totalDatasets[x] = 0;
         }
 
         int count, rowPosition, index;
+        char *tempRead, *tempHeader;
+        for (int i = 0; i < datasetCount; i++) {
+            tempRead = (char*)malloc(sizeof(char) * 1000);
+            tempHeader = (char*)malloc(sizeof(char) * 1000);
 
-        for (index = 0; index < datasetCount; index++) {
+            uniqueInput >> tempHeader;
+            uniqueInput >> tempRead;
+
             count = 0;
             rowPosition = 0;
-            while (header[index][rowPosition] != '_') {
+            while (tempHeader[rowPosition] != '_') {
                 rowPosition++;
             }
             rowPosition++;
             while (count <= ALL_DATASETS_COUNT) {
                 count++;
-                if (header[index][rowPosition] >= '0' && header[index][rowPosition] <= '9') {
-                    int value = header[index][rowPosition] - '0';
+                if (tempHeader[rowPosition] >= '0' && tempHeader[rowPosition] <= '9') {
+                    int value = tempHeader[rowPosition] - '0';
                     totalDatasets[count - 1] += value;
                 }
                 rowPosition = rowPosition + 2;
             }
         }
+
+        delete[] tempRead;
+        delete[] tempHeader;
+
+        uniqueInput.close();
+
         cout << "Total number of reads for each datasets are as follows:" << endl;
 
         for (int i = 0; i < ALL_DATASETS_COUNT; i++) {
@@ -212,6 +216,7 @@ class FASTA_readset {
         cout << "=====================================================" << endl;
         allDatasetTotalUniqueSequenceFragments();
         cout << "=====================================================" << endl;
+        readFile(datasetCount);
         totalCharacterCounts();
     }
 
@@ -284,24 +289,22 @@ class FASTA_readset {
         clock_t startTime, endTime;
         float totalTime = 0.0;
         startTime = clock();
-        if (arrayInitalized) {
-            for (int i = 0; i < datasetCount; i++) {
-                delete[] read[i];
-                delete[] header[i];
-                delete[] headerNumber[i];
-            }
-            delete[] read;
-            delete[] header;
-            delete[] headerNumber;
+
+        for (int i = 0; i < datasetCount; i++) {
+            delete[] read[i];
+            delete[] headerNumber[i];
         }
+        delete[] read;
+        delete[] headerNumber;
 
         if (input.is_open()) {
             input.close();
         }
-        cout << "Deallocated all array memory." << endl;
+
         endTime = clock();
         totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
         cout << "#####################################################" << endl;
+        cout << "Deallocating all array memory.." << endl;
         printf("Time to Deallocate memory: %3.3f seconds. \n", totalTime);
         ;
         cout << "#####################################################" << endl;
