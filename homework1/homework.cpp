@@ -50,7 +50,6 @@ int main(int argc, char** argv) {
     if (problem == "1") {
         fasta.initMillionData();
         fasta.printData();
-
     } else if (problem == "2") {
         fasta.totalUniqueSequenceFragments();
     } else if (problem == "3") {

@@ -33,7 +33,7 @@ class FASTA_readset {
         input.open(path);
         int a, b, i, j;
 
-        char* tempHeader = new char[1000];
+        char* tempHeader = new char[50];
         int tempSequenceLength = 0;
 
         headerNumber = (char**)malloc(sizeof(char*) * readLength);
@@ -41,8 +41,8 @@ class FASTA_readset {
 
         int headerLength;
         for (int i = 0; i < readLength; i++) {
-            read[i] = (char*)malloc(sizeof(char) * 1000);
-            headerNumber[i] = (char*)malloc(sizeof(char) * 1000);
+            read[i] = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
+            headerNumber[i] = (char*)malloc(sizeof(char) * 8);
 
             input >> tempHeader;
             input >> read[i];
@@ -81,7 +81,7 @@ class FASTA_readset {
         startTime = clock();
 
         /////////////////////////////////////////////////////
-        datasetCount = 10000000;
+        datasetCount = 1000000;
         readFile(datasetCount);
         /////////////////////////////////////////////////////
 
