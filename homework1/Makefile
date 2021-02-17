@@ -1,8 +1,11 @@
-homework : homework.o
-	g++ -o homework.exe homework.o 
+output : homework.o fasta.o
+	g++ -o homework.exe homework.o fasta.o
 
 homework.o : homework.cpp 
 	g++ -c homework.cpp
 
+fasta.o : fasta.cpp fasta.h 
+	g++ -c fasta.cpp
+
 clean:	
-	rm -rf homework.exe homework.o
+	rm -rf *.o homework.exe
