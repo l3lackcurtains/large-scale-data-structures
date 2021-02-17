@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "./fasta.cpp"
+#include "./fasta.h"
 
 using namespace std;
 
@@ -49,9 +49,8 @@ int main(int argc, char** argv) {
 
     if (problem == "1") {
         fasta.initMillionData();
-        fasta.printData();
     } else if (problem == "2") {
-        fasta.totalUniqueSequenceFragments();
+        fasta.initFullData();
     } else if (problem == "3") {
         fasta.getAllStatistics();
     } else if (problem == "4") {

@@ -1,8 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=arrays
-#SBATCH --output=/scratch/mp2525/arrays.out
+#SBATCH --job-name=arrays_mp2525
+#SBATCH --output=/scratch/mp2525/arrays_q4.txt	
+#SBATCH --error=/scratch/mp2525/arrays_q4.err
 #SBATCH --time=20:00
-#SBATCH --workdir=/home/mp2525
 #SBATCH --mem=10000
 
-srun ./homework 4 sample_hw_dataset
+module load gcc/10.2
+
+g++ -O3 homework.cpp -o homework.exe
+
+srun ./homework.exe 4 /common/contrib/classroom/inf503/hw_dataset.fa
