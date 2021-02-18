@@ -1,28 +1,33 @@
 #include "fasta.h"
+#include <unistd.h>
 
 #include <iostream>
 
-FASTA_readset::FASTA_readset() { datasetCount = 36000000; }
+FASTA_readset::FASTA_readset() { }
 
 FASTA_readset::FASTA_readset(string path) {
   filePath = path;
-  datasetCount = 36000000;
 }
 
 void FASTA_readset::readFile(string path, int readLength) {
+  ifstream input;
   input.open(path);
   int a, b, i, j;
 
-  char* tempHeader = (char*)malloc(sizeof(char) * 50);
+  char* tempHeader = new char[100];
+  char* tempRead = new char[SEQUENCE_LENGTH];
   int tempSequenceLength = 0;
 
-  headerNumber = (char**)malloc(sizeof(char*) * readLength);
-  read = (char**)malloc(sizeof(char*) * readLength);
+  headerNumber = new char*[readLength];
+  read = new char*[readLength];
+
+  for (int i = 0; i < readLength; i++) {
+    read[i] = new char[SEQUENCE_LENGTH];
+    headerNumber[i] = new char[8];
+  }
 
   int headerLength;
   for (int i = 0; i < readLength; i++) {
-    read[i] = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
-    headerNumber[i] = (char*)malloc(sizeof(char) * 8);
 
     input >> tempHeader;
     input >> read[i];
@@ -51,7 +56,10 @@ void FASTA_readset::readFile(string path, int readLength) {
       headerNumber[i][j] = '\0';
     }
   }
-  free(tempHeader);
+  
+  input.close();
+  delete[] tempHeader;
+
 }
 
 void FASTA_readset::readFile(int readLength) { readFile(filePath, readLength); }
@@ -72,6 +80,8 @@ void FASTA_readset::initMillionData() {
   printf("Time to read 1 million data: %3.3f seconds. \n", totalTime);
   ;
   cout << "#####################################################" << endl;
+
+  // sleep(60);
 }
 
 void FASTA_readset::initFullData() {
@@ -89,6 +99,8 @@ void FASTA_readset::initFullData() {
   printf("Time to read 36 million data: %3.3f seconds. \n", totalTime);
   ;
   cout << "#####################################################" << endl;
+  
+  // sleep(60);
 }
 
 void FASTA_readset::printData() {
@@ -116,7 +128,7 @@ void FASTA_readset::totalUniqueSequenceFragments() {
 
   cout << "Total unique sequence fragments: " << totalSequence << endl;
 
-  datasetCount = totalSequence;
+  // datasetCount = totalSequence;
 }
 
 void FASTA_readset::allDatasetTotalUniqueSequenceFragments() {
@@ -131,8 +143,8 @@ void FASTA_readset::allDatasetTotalUniqueSequenceFragments() {
   int count, rowPosition, index;
   char *tempRead, *tempHeader;
 
-  tempRead = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
-  tempHeader = (char*)malloc(sizeof(char) * 100);
+  tempRead = new char[SEQUENCE_LENGTH];
+  tempHeader = new char[100];
 
   for (int i = 0; i < datasetCount; i++) {
     
@@ -155,8 +167,8 @@ void FASTA_readset::allDatasetTotalUniqueSequenceFragments() {
     }
   }
 
-  free(tempRead);
-  free(tempHeader);
+  delete[] tempRead;
+  delete[] tempHeader;
 
   uniqueInput.close();
 
@@ -204,10 +216,16 @@ void FASTA_readset::getAllStatistics() {
 }
 
 void FASTA_readset::swap(char* stringData[], int i, int j) {
-  char* temp;
+  char* temp = new char[SEQUENCE_LENGTH];
   temp = stringData[i];
   stringData[i] = stringData[j];
   stringData[j] = temp;
+}
+
+int FASTA_readset::customStrCmp(const char *a, const char *b)
+{
+    while (*a && *a == *b) { ++a; ++b; }
+    return (int)(unsigned char)(*a) - (int)(unsigned char)(*b);
 }
 
 void FASTA_readset::quickSort(char* stringData[], int left, int right) {
@@ -218,7 +236,7 @@ void FASTA_readset::quickSort(char* stringData[], int left, int right) {
   int last = left;
 
   for (int i = left + 1; i <= right; i++) {
-    if (strcmp(stringData[i], stringData[left]) < 0) {
+    if (customStrCmp(stringData[i], stringData[left]) < 0) {
       swap(stringData, ++last, i);
     }
   }
@@ -233,16 +251,17 @@ void FASTA_readset::sortSequenceRead() {
   startTime = clock();
 
   ////////////////////////////////////////////////
-  char** temp = (char**)malloc(sizeof(char*) * datasetCount);
+  char** temp = new char*[datasetCount];
   for (int i = 0; i < datasetCount; i++) {
+    temp[i] = new char[SEQUENCE_LENGTH];
     temp[i] = read[i];
   }
 
   quickSort(temp, 0, datasetCount - 1);
 
-  char** sortedRead = (char**)malloc(sizeof(char*) * datasetCount);
+  char** sortedRead = new char*[datasetCount];
   for (int i = 0; i < datasetCount; i++) {
-    sortedRead[i] = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
+    sortedRead[i] = new char[SEQUENCE_LENGTH];
     strcpy(sortedRead[i], temp[i]);
   }
 
@@ -251,8 +270,8 @@ void FASTA_readset::sortSequenceRead() {
     cout << sortedRead[i] << endl;
   }
 
-  free(sortedRead);
-  free(temp);
+  delete[] sortedRead;
+  delete[] temp;
 
   //////////////////////////////////////////////////////////
   endTime = clock();
@@ -269,16 +288,12 @@ FASTA_readset::~FASTA_readset() {
   startTime = clock();
 
   for (int i = 0; i < datasetCount; i++) {
-    free(read[i]);
-    free(headerNumber[i]);
+    delete[] read[i];
+    delete[] headerNumber[i];
   }
 
-  free(read);
-  free(headerNumber);
-
-  if (input.is_open()) {
-    input.close();
-  }
+  delete[] read;
+  delete[] headerNumber;
 
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;

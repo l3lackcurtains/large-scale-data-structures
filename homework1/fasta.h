@@ -7,6 +7,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <unistd.h>
 
 #define ALL_DATASETS_COUNT 14
 
@@ -16,9 +17,8 @@ using namespace std;
 
 class FASTA_readset {
    private:
-    int datasetCount;
+    int datasetCount = 36000000;
     string filePath;
-    ifstream input;
     char** headerNumber;
     char** read;
 
@@ -35,6 +35,7 @@ class FASTA_readset {
     void totalCharacterCounts();
     void getAllStatistics();
     void swap(char* stringData[], int i, int j);
+    int customStrCmp(const char *a, const char *b);
     void quickSort(char* stringData[], int left, int right);
     void sortSequenceRead();
     ~FASTA_readset();

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=arrays_mp2525_q4
+#SBATCH --job-name=q4_arrays_mp2525
 #SBATCH --output=/scratch/mp2525/arrays_q4.txt	
 #SBATCH --error=/scratch/mp2525/arrays_q4.err
 #SBATCH --time=10:00
