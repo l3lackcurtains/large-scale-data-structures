@@ -2,15 +2,15 @@
 #define FASTA_H
 
 #include <stdlib.h>
-#include <string.h>
-
 #include <ctime>
 #include <fstream>
 #include <iostream>
 #include <unistd.h>
 
+// Represents the dataset number
 #define ALL_DATASETS_COUNT 14
 
+// Represents the genome sequence string length
 #define SEQUENCE_LENGTH 50
 
 using namespace std;
@@ -21,6 +21,12 @@ class FASTA_readset {
     string filePath;
     char** headerNumber;
     char** read;
+    int customStrCmp(const char *a, const char *b);
+    void swap(char* stringData[], int i, int j);
+    void quickSort(char* stringData[], int left, int right);
+    void totalUniqueSequenceFragments();
+    void allDatasetTotalUniqueSequenceFragments();
+    void totalCharacterCounts();
 
    public:
     FASTA_readset();
@@ -30,13 +36,7 @@ class FASTA_readset {
     void initMillionData();
     void initFullData();
     void printData();
-    void totalUniqueSequenceFragments();
-    void allDatasetTotalUniqueSequenceFragments();
-    void totalCharacterCounts();
     void getAllStatistics();
-    void swap(char* stringData[], int i, int j);
-    int customStrCmp(const char *a, const char *b);
-    void quickSort(char* stringData[], int left, int right);
     void sortSequenceRead();
     ~FASTA_readset();
 };
