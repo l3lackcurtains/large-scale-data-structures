@@ -40,3 +40,8 @@ Run the command:
 where question_number is { 1, 2, 3, 4, 5 }
 Example: for question 3
 > sbatch q3.sh
+
+################################################################################
+***** Note ********
+################################################################################
+I have used exactly 36 million data from the dataset for questions 2, 4, and 5 instead of 36220411 (36 million approximate).
