@@ -1,6 +1,6 @@
 #include "fasta.h"
 #include <unistd.h>
-
+#include <string.h>
 #include <iostream>
 
 // default constructor
@@ -251,13 +251,6 @@ void FASTA_readset::swap(char* stringData[], int i, int j) {
   stringData[j] = temp;
 }
 
-// Helper function to compare two string
-int FASTA_readset::customStrCmp(const char *a, const char *b)
-{
-    while (*a && *a == *b) { ++a; ++b; }
-    return (int)(unsigned char)(*a) - (int)(unsigned char)(*b);
-}
-
 // Quick sort algorithm function
 void FASTA_readset::quickSort(char* stringData[], int left, int right) {
   if (left >= right) {
@@ -267,7 +260,7 @@ void FASTA_readset::quickSort(char* stringData[], int left, int right) {
   int last = left;
 
   for (int i = left + 1; i <= right; i++) {
-    if (customStrCmp(stringData[i], stringData[left]) < 0) {
+    if (strcmp(stringData[i], stringData[left]) < 0) {
       swap(stringData, ++last, i);
     }
   }
@@ -298,8 +291,8 @@ void FASTA_readset::sortSequenceRead() {
     strcpy(sortedRead[i], temp[i]);
   }
 
-  cout << "First 10 lines after sorting are as follows:" << endl;
-  for (int i = 0; i < 10; i++) {
+  cout << "First 20 lines after sorting are as follows:" << endl;
+  for (int i = 0; i < 20; i++) {
     cout << sortedRead[i] << endl;
   }
 

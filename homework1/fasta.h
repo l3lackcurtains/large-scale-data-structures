@@ -21,7 +21,6 @@ class FASTA_readset {
     string filePath;
     char** headerNumber;
     char** read;
-    int customStrCmp(const char *a, const char *b);
     void swap(char* stringData[], int i, int j);
     void quickSort(char* stringData[], int left, int right);
     void totalUniqueSequenceFragments();

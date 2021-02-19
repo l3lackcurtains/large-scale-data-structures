@@ -3,12 +3,13 @@
 ################################################################################
 1) fasta.h: It is a header file for the fasta.cpp file which includes the class declaration and methods definition of "FASTA_readset" class.
 2) fasta.cpp: It includes the methods of "FASTA_readset" class.
-3) homework.cpp: Main file that runs the solutions for 5 questions.
+3) homework.cpp: The main file that runs the solutions for 5 questions.
 
 ################################################################################
 # Others modules used
 ################################################################################
 ctime: It is used for the calculation of CPU time.
+string.h: Two functions are employed from this library: strcmp and strcpy in question 5.
 
 ################################################################################
 # Compile the project
@@ -17,7 +18,7 @@ Run the command:
 > make
 
 ################################################################################
-# Execute homework sub problems
+# Execute homework subproblems
 ################################################################################
 Run the command:
 > ./homework.exe {question_number} /common/contrib/classroom/inf503/hw_dataset.fa
