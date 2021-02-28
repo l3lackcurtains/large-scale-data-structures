@@ -155,15 +155,17 @@ void FASTAreadset_LL::quickSort(char* stringData[], int left, int right) {
   quickSort(stringData, last + 1, right);
 }
 
-int FASTAreadset_LL::binarySearch(char** sequenceRead, int l, int r, char toSearch[SEQUENCE_LENGTH]) {
-  if (r >= l) {
-    int midPoint = l + (r - l) / 2;
-    if (strcmp(sequenceRead[midPoint], toSearch) == 0) return midPoint;
-    if (strcmp(sequenceRead[midPoint], toSearch) > 0) return binarySearch(sequenceRead, l, midPoint - 1, toSearch);
-    return binarySearch(sequenceRead, midPoint + 1, r, toSearch);
-  }
-  return -1;
-
+Node* FASTAreadset_LL::performSearch(char toSearch[SEQUENCE_LENGTH]) {
+    Node* foundIndex = NULL;
+    Node* current = head;
+    while (current != NULL) {
+      if(strcmp(toSearch, current->sequenceRead) == 0) {
+        foundIndex = current;
+        break;
+      }
+      current = current->next;
+    }
+    return foundIndex;
 }
 
 // Function to sort the genome sequences read
@@ -173,61 +175,46 @@ void FASTAreadset_LL::searchSequences() {
   startTime = clock();
 
   ////////////////////////////////////////////////
-  char** sortedRead = new char*[datasetCount];
-  int count = 0;
-  Node* current = head;
-  while (current != NULL) {
-    sortedRead[count] = current->sequenceRead;
-    count++;
-    current = current->next;
-  }
-
-  quickSort(sortedRead, 0, datasetCount - 1);
-
   char toSearch1[] = "CTAGGTACATCCACACACAGCAGCGCATTATGTATTTATTGGATTTATTT";
   char toSearch2[] = "GCGCGATCAGCTTCGCGCGCACCGCGAGCGCCGATTGCACGAAATGGCGC";
   char toSearch3[] = "CGATGATCAGGGGCGTTGCGTAATAGAAACTGCGAAGCCGCTCTATCGCC";
   char toSearch4[] = "CGTTGGGAGTGCTTGGTTTAGCGCAAATGAGTTTTCGAGGCTATCAAAAA";
   char toSearch5[] = "ACTGTAGAAGAAAAAAGTGAGGCTGCTCTTTTACAAGAAAAAGTNNNNNN";
 
-  int search1 = binarySearch(sortedRead, 0, datasetCount - 1, toSearch1);
-  if (search1 != -1) {
-    cout << toSearch1 << ": Found at sorted index " << search1 << endl;
+  Node* search1 = performSearch(toSearch1);
+  if(search1 != NULL) {
+    cout << toSearch1 << ": FOUND"<< endl;
   } else {
-    cout << toSearch1 << ": Not found" << endl;
+    cout << toSearch1 << ": NOT FOUND"<< endl;
   }
 
-  int search2 = binarySearch(sortedRead, 0, datasetCount - 1, toSearch2);
-  if (search2 != -1) {
-    cout << toSearch2 << ": Found at sorted index " << search2 << endl;
+  Node* search2 = performSearch(toSearch2);
+  if(search2 != NULL) {
+    cout << toSearch2 << ": FOUND"<< endl;
   } else {
-    cout << toSearch2 << ": Not found" << endl;
+    cout << toSearch2 << ": NOT FOUND"<< endl;
   }
 
-  int search3 = binarySearch(sortedRead, 0, datasetCount - 1, toSearch3);
-  if (search3 != -1) {
-    cout << toSearch3 << ": Found at sorted index " << search3 << endl;
+  Node* search3 = performSearch(toSearch3);
+  if(search3 != NULL) {
+    cout << toSearch3 << ": FOUND"<< endl;
   } else {
-    cout << toSearch3 << ": Not found" << endl;
+    cout << toSearch3 << ": NOT FOUND"<< endl;
   }
 
-  int search4 = binarySearch(sortedRead, 0, datasetCount - 1, toSearch4);
-  if (search4 != -1) {
-    cout << toSearch4 << ": Found at sorted index " << search4 << endl;
+  Node* search4 = performSearch(toSearch4);
+  if(search4 != NULL) {
+    cout << toSearch4 << ": FOUND"<< endl;
   } else {
-    cout << toSearch4 << ": Not found" << endl;
+    cout << toSearch4 << ": NOT FOUND"<< endl;
   }
 
-  int search5 = binarySearch(sortedRead, 0, datasetCount - 1, toSearch5);
-  if (search5 != -1) {
-    cout << toSearch5 << ": Found at sorted index " << search5 << endl;
+  Node* search5 = performSearch(toSearch5);
+  if(search5 != NULL) {
+    cout << toSearch5 << ": FOUND"<< endl;
   } else {
-    cout << toSearch5 << ": Not found" << endl;
+    cout << toSearch5 << ": NOT FOUND"<< endl;
   }
-
-
-  // Deallocate temporary arrays
-  delete[] sortedRead;
 
   //////////////////////////////////////////////////////////
   endTime = clock();

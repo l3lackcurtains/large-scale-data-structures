@@ -27,7 +27,7 @@ class FASTAreadset_LL {
     char** sortedRead;
     void swap(char* stringData[], int i, int j);
     void quickSort(char* stringData[], int left, int right);
-    int binarySearch(char** sequenceRead, int l, int r, char toSearch[SEQUENCE_LENGTH]);
+    Node* performSearch(char toSearch[SEQUENCE_LENGTH]);
 
    public:
     FASTAreadset_LL();
