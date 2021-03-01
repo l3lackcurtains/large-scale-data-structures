@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
         cout << "[Error] Invalid Option number." << endl;
     }
 
-    cout << endl << "/////////////////////////////////////////////////////" << endl;
+    cout << "/////////////////////////////////////////////////////" << endl;
 
     return (0);
 }

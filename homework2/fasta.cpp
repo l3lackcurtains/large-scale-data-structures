@@ -63,7 +63,10 @@ void FASTAreadset_LL::readFile(char* path, int readLength) {
   char* tempHeader = new char[100];
 
   Node* currentRead = NULL;
-  for (int i = 0; i < readLength; i++) {
+  int tempCount = -1;
+
+  while(!input.eof()) {
+    tempCount++;
     Node* newRead = new Node;
 
     input >> tempHeader;
@@ -75,13 +78,21 @@ void FASTAreadset_LL::readFile(char* path, int readLength) {
       currentRead->next = newRead;
     }
     currentRead = newRead;
-    if (i == 0) {
+    if (tempCount == 0) {
       head = newRead;
     }
+
+    if(readLength == tempCount) break;
+    
   }
+
+  datasetCount = tempCount;
+
+  cout << "Initialized " << tempCount << " genome sequences." << endl;
 
   // Close file and delete tenporary head
   input.close();
+  delete[] tempHeader;
 }
 
 // Method to read file upto the specified length
@@ -89,20 +100,20 @@ void FASTAreadset_LL::readFile(int readLength) {
   readFile(filePath, readLength);
 }
 
-// Method to initialize the 36 million data
+// Method to initialize all data from dataset
 void FASTAreadset_LL::initFullData() {
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
 
   /////////////////////////////////////////////////////
-  readFile(datasetCount);
+  readFile(-1);
   /////////////////////////////////////////////////////
 
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
   cout << "#####################################################" << endl;
-  printf("Time to read 36 million data: %3.3f seconds. \n", totalTime);
+  printf("Time to read full dataset: %3.3f seconds. \n", totalTime);
   ;
   cout << "#####################################################" << endl;
 
@@ -129,32 +140,6 @@ void FASTAreadset_LL::printGenomeData() {
     cout << temp->sequenceRead << endl;
     temp = temp->next;
   }
-}
-
-// Helper function for quick sort algorith for swaping
-void FASTAreadset_LL::swap(char* stringData[], int i, int j) {
-  char* temp = new char[SEQUENCE_LENGTH];
-  temp = stringData[i];
-  stringData[i] = stringData[j];
-  stringData[j] = temp;
-}
-
-// Quick sort algorithm function
-void FASTAreadset_LL::quickSort(char* stringData[], int left, int right) {
-  if (left >= right) {
-    return;
-  }
-  swap(stringData, left, (left + right) / 2);
-  int last = left;
-
-  for (int i = left + 1; i <= right; i++) {
-    if (strcmp(stringData[i], stringData[left]) < 0) {
-      swap(stringData, ++last, i);
-    }
-  }
-  swap(stringData, left, last);
-  quickSort(stringData, left, last - 1);
-  quickSort(stringData, last + 1, right);
 }
 
 Node* FASTAreadset_LL::performSearch(char toSearch[SEQUENCE_LENGTH]) {
@@ -234,7 +219,6 @@ FASTAreadset_LL::~FASTAreadset_LL() {
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
-
   if (head != NULL) {
     Node* current = head;
     Node* next = NULL;

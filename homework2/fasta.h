@@ -21,13 +21,11 @@ using namespace std;
 
 class FASTAreadset_LL {
    private:
-    int datasetCount = 100;
+    int datasetCount;
     char* filePath;
     Node* head;
     Node* genomeHead;
     char** sortedRead;
-    void swap(char* stringData[], int i, int j);
-    void quickSort(char* stringData[], int left, int right);
     Node* performSearch(char toSearch[SEQUENCE_LENGTH]);
 
    public:
@@ -36,7 +34,6 @@ class FASTAreadset_LL {
     FASTAreadset_LL(FASTAreadset_LL* oldFastaReadset);
     void readFile(char* path, int readLength);
     void readFile(int readLength);
-    void initMillionData();
     void initFullData();
     void printData();
     void printGenomeData();
