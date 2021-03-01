@@ -5,12 +5,13 @@
 #include <iostream>
 
 // default constructor
-FASTAreadset_LL::FASTAreadset_LL() { head = NULL; }
+FASTAreadset_LL::FASTAreadset_LL() { head = NULL; genomeHead = NULL; }
 
 // Constructor that takes the file path
 FASTAreadset_LL::FASTAreadset_LL(char* path) {
   filePath = path;
   head = NULL;
+  genomeHead = NULL;
 }
 
 FASTAreadset_LL::FASTAreadset_LL(FASTAreadset_LL* oldFastaReadset) {
@@ -145,7 +146,9 @@ void FASTAreadset_LL::printGenomeData() {
 Node* FASTAreadset_LL::performSearch(char toSearch[SEQUENCE_LENGTH]) {
   Node* foundIndex = NULL;
   Node* current = head;
+  int count = 0;
   while (current != NULL) {
+    count++;
     if (strcmp(toSearch, current->sequenceRead) == 0) {
       foundIndex = current;
       break;
