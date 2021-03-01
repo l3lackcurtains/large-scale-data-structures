@@ -47,24 +47,25 @@ int main(int argc, char** argv) {
     problem = argv[1];
     filePath = argv[2];
 
-    FASTAreadset_LL fasta(filePath);
-
     if (strcmp(problem ,"1") == 0) {
+        FASTAreadset_LL fasta(filePath);
         fasta.initFullData();
     } else if (strcmp(problem ,"2") == 0) {
+        FASTAreadset_LL fasta(filePath);
         fasta.initFullData();
     } else if (strcmp(problem ,"3") == 0) {
+        FASTAreadset_LL fasta(filePath);
         fasta.initFullData();
         FASTAreadset_LL fastaCopy(&fasta);
     } else if (strcmp(problem ,"4") == 0) {
-        fasta.initFullData();
-    } else if (strcmp(problem ,"5") == 0) {
+        FASTAreadset_LL fasta(filePath);
         fasta.initFullData();
         fasta.searchSequences();
-    } else if (strcmp(problem ,"6") == 0) {
+    } else if (strcmp(problem ,"5") == 0) {
+        FASTAreadset_LL fasta(filePath);
         fasta.readGenomeDataset(filePath);
-        fasta.printGenomeData();
-    } else if (strcmp(problem ,"7") == 0) {
+    } else if (strcmp(problem ,"6") == 0) {
+        FASTAreadset_LL fasta("/common/contrib/classroom/inf503/hw_dataset.fa");
         fasta.initFullData();
         fasta.readGenomeDataset(filePath);
         fasta.searchGenomeDataset();

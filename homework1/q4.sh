@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=q4_arrays_mp2525
-#SBATCH --output=/scratch/mp2525/arrays_q4.txt	
-#SBATCH --error=/scratch/mp2525/arrays_q4.err
+#SBATCH --job-name=q4_linkedlist_mp2525
+#SBATCH --output=/scratch/mp2525/linkedlist_q4.txt	
+#SBATCH --error=/scratch/mp2525/linkedlist_q4.err
 #SBATCH --time=10:00
 #SBATCH --mem=10000
 

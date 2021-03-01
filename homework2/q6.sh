@@ -10,6 +10,6 @@ module load gcc/10.2
 
 make
 
-srun ./homework.exe 5 /common/contrib/classroom/inf503/hw_dataset.fa
+srun ./homework.exe 6 /common/contrib/classroom/inf503/test_genome.fasta
 
 make clean

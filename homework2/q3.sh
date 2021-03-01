@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=q3_arrays_mp2525
-#SBATCH --output=/scratch/mp2525/arrays_q3.txt	
-#SBATCH --error=/scratch/mp2525/arrays_q3.err
+#SBATCH --job-name=q3_linkedlist_mp2525
+#SBATCH --output=/scratch/mp2525/linkedlist_q3.txt	
+#SBATCH --error=/scratch/mp2525/linkedlist_q3.err
 #SBATCH --time=10:00
 #SBATCH --mem=10000
 

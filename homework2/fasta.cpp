@@ -251,13 +251,19 @@ FASTAreadset_LL::~FASTAreadset_LL() {
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
   cout << "#####################################################" << endl;
-  cout << "Deallocating all array memory.." << endl;
+  cout << "Deallocating all linkedlists.." << endl;
   printf("Time to Deallocate memory: %3.3f seconds. \n", totalTime);
   ;
   cout << "#####################################################" << endl;
 }
 
 void FASTAreadset_LL::readGenomeDataset(char* filePath) {
+
+  clock_t startTime, endTime;
+  float totalTime = 0.0;
+  startTime = clock();
+
+  /////////////////////////////////////////////////////////////////
   ifstream input;
   input.open(filePath);
   char tempRead[SEQUENCE_LENGTH];
@@ -283,13 +289,25 @@ void FASTAreadset_LL::readGenomeDataset(char* filePath) {
         }
         current = newNode;
         nodesStored++;
-        characterCount = 0;
+        characterCount = SEQUENCE_LENGTH - 1;
+      }
+      for (int i = 1; i < SEQUENCE_LENGTH; i++) {
+        tempRead[i - 1] = tempRead[i];
       }
     }
   }
+
   input.close();
 
+  //////////////////////////////////////////////////////////////////
+
+  endTime = clock();
+  totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+  cout << "#####################################################" << endl;
   cout << "Initialized " << nodesStored << " 50-mers data." << endl;
+  printf("Time to Allocate memory: %3.3f seconds. \n", totalTime);
+  ;
+  cout << "#####################################################" << endl;
 }
 
 void FASTAreadset_LL::searchGenomeDataset() {
