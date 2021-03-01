@@ -50,25 +50,29 @@ int main(int argc, char** argv) {
     FASTAreadset_LL fasta(filePath);
 
     if (strcmp(problem ,"1") == 0) {
-        fasta.initMillionData();
-        fasta.printData();
+        fasta.initFullData();
     } else if (strcmp(problem ,"2") == 0) {
         fasta.initFullData();
     } else if (strcmp(problem ,"3") == 0) {
-        fasta.initMillionData();
-        
-		FASTAreadset_LL fastaCopy(&fasta);
-        fastaCopy.printData();
+        fasta.initFullData();
+        FASTAreadset_LL fastaCopy(&fasta);
     } else if (strcmp(problem ,"4") == 0) {
         fasta.initFullData();
     } else if (strcmp(problem ,"5") == 0) {
         fasta.initFullData();
         fasta.searchSequences();
+    } else if (strcmp(problem ,"6") == 0) {
+        fasta.readGenomeDataset(filePath);
+        fasta.printGenomeData();
+    } else if (strcmp(problem ,"7") == 0) {
+        fasta.initFullData();
+        fasta.readGenomeDataset(filePath);
+        fasta.searchGenomeDataset();
     } else {
         cout << "[Error] Invalid Option number." << endl;
     }
 
-    cout << "/////////////////////////////////////////////////////" << endl;
+    cout << endl << "/////////////////////////////////////////////////////" << endl;
 
     return (0);
 }

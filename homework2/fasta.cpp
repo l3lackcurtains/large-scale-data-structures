@@ -1,7 +1,6 @@
 #include "fasta.h"
 
 #include <string.h>
-#include <unistd.h>
 
 #include <iostream>
 
@@ -15,6 +14,11 @@ FASTAreadset_LL::FASTAreadset_LL(char* path) {
 }
 
 FASTAreadset_LL::FASTAreadset_LL(FASTAreadset_LL* oldFastaReadset) {
+  clock_t startTime, endTime;
+  float totalTime = 0.0;
+  startTime = clock();
+
+  /////////////////////////////////////////////////////
   head = NULL;
   Node* current;
   int count = 0;
@@ -36,6 +40,15 @@ FASTAreadset_LL::FASTAreadset_LL(FASTAreadset_LL* oldFastaReadset) {
     temp = temp->next;
     count++;
   }
+  /////////////////////////////////////////////////////
+
+  endTime = clock();
+  totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+  cout << "#####################################################" << endl;
+  printf("Time to perform a deep copy of entire dataset: %3.3f seconds. \n",
+         totalTime);
+  ;
+  cout << "#####################################################" << endl;
 }
 // Method to read readLength count of data from the file from its path
 void FASTAreadset_LL::readFile(char* path, int readLength) {
@@ -76,27 +89,6 @@ void FASTAreadset_LL::readFile(int readLength) {
   readFile(filePath, readLength);
 }
 
-// Method to initialize the million data
-void FASTAreadset_LL::initMillionData() {
-  clock_t startTime, endTime;
-  float totalTime = 0.0;
-  startTime = clock();
-
-  /////////////////////////////////////////////////////
-  readFile(datasetCount);
-  /////////////////////////////////////////////////////
-
-  endTime = clock();
-  totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
-  cout << "#####################################################" << endl;
-  printf("Time to read 1 million data: %3.3f seconds. \n", totalTime);
-  ;
-  cout << "#####################################################" << endl;
-
-  // Sleep was used to capture memory used in question 1
-  // sleep(60);
-}
-
 // Method to initialize the 36 million data
 void FASTAreadset_LL::initFullData() {
   clock_t startTime, endTime;
@@ -122,6 +114,16 @@ void FASTAreadset_LL::initFullData() {
 void FASTAreadset_LL::printData() {
   Node* temp;
   temp = head;
+
+  while (temp != NULL) {
+    cout << temp->sequenceRead << endl;
+    temp = temp->next;
+  }
+}
+
+void FASTAreadset_LL::printGenomeData() {
+  Node* temp;
+  temp = genomeHead;
 
   while (temp != NULL) {
     cout << temp->sequenceRead << endl;
@@ -156,16 +158,16 @@ void FASTAreadset_LL::quickSort(char* stringData[], int left, int right) {
 }
 
 Node* FASTAreadset_LL::performSearch(char toSearch[SEQUENCE_LENGTH]) {
-    Node* foundIndex = NULL;
-    Node* current = head;
-    while (current != NULL) {
-      if(strcmp(toSearch, current->sequenceRead) == 0) {
-        foundIndex = current;
-        break;
-      }
-      current = current->next;
+  Node* foundIndex = NULL;
+  Node* current = head;
+  while (current != NULL) {
+    if (strcmp(toSearch, current->sequenceRead) == 0) {
+      foundIndex = current;
+      break;
     }
-    return foundIndex;
+    current = current->next;
+  }
+  return foundIndex;
 }
 
 // Function to sort the genome sequences read
@@ -182,38 +184,38 @@ void FASTAreadset_LL::searchSequences() {
   char toSearch5[] = "ACTGTAGAAGAAAAAAGTGAGGCTGCTCTTTTACAAGAAAAAGTNNNNNN";
 
   Node* search1 = performSearch(toSearch1);
-  if(search1 != NULL) {
-    cout << toSearch1 << ": FOUND"<< endl;
+  if (search1 != NULL) {
+    cout << toSearch1 << ": FOUND" << endl;
   } else {
-    cout << toSearch1 << ": NOT FOUND"<< endl;
+    cout << toSearch1 << ": NOT FOUND" << endl;
   }
 
   Node* search2 = performSearch(toSearch2);
-  if(search2 != NULL) {
-    cout << toSearch2 << ": FOUND"<< endl;
+  if (search2 != NULL) {
+    cout << toSearch2 << ": FOUND" << endl;
   } else {
-    cout << toSearch2 << ": NOT FOUND"<< endl;
+    cout << toSearch2 << ": NOT FOUND" << endl;
   }
 
   Node* search3 = performSearch(toSearch3);
-  if(search3 != NULL) {
-    cout << toSearch3 << ": FOUND"<< endl;
+  if (search3 != NULL) {
+    cout << toSearch3 << ": FOUND" << endl;
   } else {
-    cout << toSearch3 << ": NOT FOUND"<< endl;
+    cout << toSearch3 << ": NOT FOUND" << endl;
   }
 
   Node* search4 = performSearch(toSearch4);
-  if(search4 != NULL) {
-    cout << toSearch4 << ": FOUND"<< endl;
+  if (search4 != NULL) {
+    cout << toSearch4 << ": FOUND" << endl;
   } else {
-    cout << toSearch4 << ": NOT FOUND"<< endl;
+    cout << toSearch4 << ": NOT FOUND" << endl;
   }
 
   Node* search5 = performSearch(toSearch5);
-  if(search5 != NULL) {
-    cout << toSearch5 << ": FOUND"<< endl;
+  if (search5 != NULL) {
+    cout << toSearch5 << ": FOUND" << endl;
   } else {
-    cout << toSearch5 << ": NOT FOUND"<< endl;
+    cout << toSearch5 << ": NOT FOUND" << endl;
   }
 
   //////////////////////////////////////////////////////////
@@ -232,15 +234,30 @@ FASTAreadset_LL::~FASTAreadset_LL() {
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
-  Node* current = head;
-  Node* next = NULL;
 
-  while (current != NULL) {
-    next = current->next;
-    free(current);
-    current = next;
+  if (head != NULL) {
+    Node* current = head;
+    Node* next = NULL;
+
+    while (current != NULL) {
+      next = current->next;
+      free(current);
+      current = next;
+    }
+    head = NULL;
   }
-  head = NULL;
+
+  if (genomeHead != NULL) {
+    Node* current = genomeHead;
+    Node* next = NULL;
+
+    while (current != NULL) {
+      next = current->next;
+      free(current);
+      current = next;
+    }
+    head = NULL;
+  }
 
   //////////////////////////////////////////////////////////////////
 
@@ -249,6 +266,68 @@ FASTAreadset_LL::~FASTAreadset_LL() {
   cout << "#####################################################" << endl;
   cout << "Deallocating all array memory.." << endl;
   printf("Time to Deallocate memory: %3.3f seconds. \n", totalTime);
+  ;
+  cout << "#####################################################" << endl;
+}
+
+void FASTAreadset_LL::readGenomeDataset(char* filePath) {
+  ifstream input;
+  input.open(filePath);
+  char tempRead[SEQUENCE_LENGTH];
+  char c = '\0';
+  int characterCount = 0;
+  int nodesStored = 0;
+  Node* current;
+  while (input.get(c)) {
+    if (c == 'A' || c == 'C' || c == 'G' || c == 'T' || c == 'N') {
+      tempRead[characterCount] = c;
+      characterCount++;
+      if (characterCount == SEQUENCE_LENGTH) {
+        Node* newNode = new Node;
+        for (int k = 0; k < SEQUENCE_LENGTH; k++) {
+          newNode->sequenceRead[k] = tempRead[k];
+        }
+        (newNode->sequenceRead)[SEQUENCE_LENGTH] = '\0';
+        newNode->next = NULL;
+        if (nodesStored == 0) {
+          genomeHead = newNode;
+        } else {
+          current->next = newNode;
+        }
+        current = newNode;
+        nodesStored++;
+        characterCount = 0;
+      }
+    }
+  }
+  input.close();
+
+  cout << "Initialized " << nodesStored << " 50-mers data." << endl;
+}
+
+void FASTAreadset_LL::searchGenomeDataset() {
+  clock_t startTime, endTime;
+  float totalTime = 0.0;
+  startTime = clock();
+
+  /////////////////////////////////////////////////////
+  Node* current = genomeHead;
+  int count = 0;
+  int total = 0;
+  while (current != NULL) {
+    count++;
+    Node* result = performSearch(current->sequenceRead);
+    if (result != NULL) total++;
+    current = current->next;
+  }
+  cout << total << " 50 mers genome sequences match were found."
+       << endl;
+  /////////////////////////////////////////////////////
+  
+  endTime = clock();
+  totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+  cout << "#####################################################" << endl;
+  printf("Time search all 50-mers genome sequences: %3.3f seconds. \n", totalTime);
   ;
   cout << "#####################################################" << endl;
 }

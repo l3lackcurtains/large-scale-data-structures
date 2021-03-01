@@ -24,6 +24,7 @@ class FASTAreadset_LL {
     int datasetCount = 100;
     char* filePath;
     Node* head;
+    Node* genomeHead;
     char** sortedRead;
     void swap(char* stringData[], int i, int j);
     void quickSort(char* stringData[], int left, int right);
@@ -38,7 +39,10 @@ class FASTAreadset_LL {
     void initMillionData();
     void initFullData();
     void printData();
+    void printGenomeData();
     void searchSequences();
+    void searchGenomeDataset();
+    void readGenomeDataset(char* filePath);
     ~FASTAreadset_LL();
 };
 
