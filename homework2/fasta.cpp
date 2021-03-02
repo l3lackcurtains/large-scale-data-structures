@@ -1,13 +1,11 @@
 #include "fasta.h"
-
-#include <string.h>
-
 #include <iostream>
 
-#include <unistd.h>
-
 // default constructor
-FASTAreadset_LL::FASTAreadset_LL() { head = NULL; genomeHead = NULL; }
+FASTAreadset_LL::FASTAreadset_LL() {
+  head = NULL;
+  genomeHead = NULL;
+}
 
 // Constructor that takes the file path
 FASTAreadset_LL::FASTAreadset_LL(char* path) {
@@ -68,7 +66,7 @@ void FASTAreadset_LL::readFile(char* path, int readLength) {
   Node* currentRead = NULL;
   int tempCount = -1;
 
-  while(!input.eof()) {
+  while (!input.eof()) {
     tempCount++;
     Node* newRead = new Node;
 
@@ -84,8 +82,7 @@ void FASTAreadset_LL::readFile(char* path, int readLength) {
     if (tempCount == 0) {
       head = newRead;
     }
-    if(readLength == tempCount) break;
-    
+    if (readLength == tempCount) break;
   }
 
   datasetCount = tempCount;
@@ -259,7 +256,6 @@ FASTAreadset_LL::~FASTAreadset_LL() {
 }
 
 void FASTAreadset_LL::readGenomeDataset(char* filePath) {
-
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
@@ -326,14 +322,14 @@ void FASTAreadset_LL::searchGenomeDataset() {
     if (result != NULL) total++;
     current = current->next;
   }
-  cout << total << " 50 mers genome sequences match were found."
-       << endl;
+  cout << total << " 50 mers genome sequences match were found." << endl;
   /////////////////////////////////////////////////////
-  
+
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
   cout << "#####################################################" << endl;
-  printf("Time search all 50-mers genome sequences: %3.3f seconds. \n", totalTime);
+  printf("Time search all 50-mers genome sequences: %3.3f seconds. \n",
+         totalTime);
   ;
   cout << "#####################################################" << endl;
 }
