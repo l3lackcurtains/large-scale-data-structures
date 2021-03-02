@@ -45,7 +45,6 @@ FASTAreadset_LL::FASTAreadset_LL(FASTAreadset_LL *oldFastaReadset)
     {
       (newNode->sequenceRead)[k] = (temp->sequenceRead)[k];
     }
-    (newNode->sequenceRead)[SEQUENCE_LENGTH] = '\0';
     newNode->next = NULL;
 
     if (count == 0)
@@ -262,7 +261,7 @@ void FASTAreadset_LL::searchSequences()
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
   cout << "#####################################################" << endl;
-  printf("Time to sort search sequences: %3.3f seconds. \n", totalTime);
+  printf("Time to search the 5 sequences: %3.3f seconds. \n", totalTime);
   ;
   cout << "#####################################################" << endl;
 }
@@ -348,7 +347,6 @@ void FASTAreadset_LL::readGenomeDataset(char *filePath, int genomeDataLimit)
         {
           newNode->sequenceRead[k] = tempRead[k];
         }
-        (newNode->sequenceRead)[SEQUENCE_LENGTH] = '\0';
         newNode->next = NULL;
         if (nodesStored == 0)
         {
