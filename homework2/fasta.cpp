@@ -82,7 +82,6 @@ void FASTAreadset_LL::readFile(char* path, int readLength) {
     if (tempCount == 0) {
       head = newRead;
     }
-
     if(readLength == tempCount) break;
     
   }
@@ -102,13 +101,13 @@ void FASTAreadset_LL::readFile(int readLength) {
 }
 
 // Method to initialize all data from dataset
-void FASTAreadset_LL::initFullData() {
+void FASTAreadset_LL::initNthData(int limit) {
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
 
   /////////////////////////////////////////////////////
-  readFile(-1);
+  readFile(limit);
   /////////////////////////////////////////////////////
 
   endTime = clock();

@@ -10,6 +10,6 @@ module load gcc/10.2
 
 make
 
-srun ./homework.exe 4 /common/contrib/classroom/inf503/hw_dataset.fa
+srun ./homework problem1D /common/contrib/classroom/inf503/hw_dataset.fa
 
 make clean

@@ -34,7 +34,7 @@ class FASTAreadset_LL {
     FASTAreadset_LL(FASTAreadset_LL* oldFastaReadset);
     void readFile(char* path, int readLength);
     void readFile(int readLength);
-    void initFullData();
+    void initNthData(int limit);
     void printData();
     void printGenomeData();
     void searchSequences();

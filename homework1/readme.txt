@@ -21,10 +21,10 @@ Run the command:
 # Execute homework subproblems
 ################################################################################
 Run the command:
-> ./homework.exe {question_number} /common/contrib/classroom/inf503/hw_dataset.fa
+> ./homework {question_number} /common/contrib/classroom/inf503/hw_dataset.fa
 where question_number is { 1, 2, 3, 4, 5 }
 Example: for question 3
-> ./homework.exe 3 /common/contrib/classroom/inf503/hw_dataset.fa
+> ./homework 3 /common/contrib/classroom/inf503/hw_dataset.fa
 
 ################################################################################
 # Clean the project

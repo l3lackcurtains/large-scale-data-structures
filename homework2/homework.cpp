@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     //Lets do sanity checks to make sure the proper number of parameters were passed in
     ////////////////////////////////////////////////////////////////////////////////////
 
-    if (argc != 3) {  // unexpected program call
+    if (argc < 3) {  // unexpected program call
         cout << endl
              << endl
              << "==========================" << endl;
@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
         cout << "The first argument is: " << argv[0] << endl;
         cout << "The second argument is: " << argv[1] << endl;
         cout << "The third argument is: " << argv[2] << endl;
+        cout << "The fourth argument is: " << argv[2] << endl;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -46,27 +47,29 @@ int main(int argc, char** argv) {
     char* filePath = new char[100];
     problem = argv[1];
     filePath = argv[2];
+    int limit = -1;
+    if(argv[3]) limit = atoi(argv[3]);
 
-    if (strcmp(problem ,"1") == 0) {
+    if (strcmp(problem ,"problem1A") == 0) {
         FASTAreadset_LL fasta(filePath);
-        fasta.initFullData();
-    } else if (strcmp(problem ,"2") == 0) {
+        fasta.initNthData(limit);
+    } else if (strcmp(problem ,"problem1A") == 0) {
         FASTAreadset_LL fasta(filePath);
-        fasta.initFullData();
-    } else if (strcmp(problem ,"3") == 0) {
+        fasta.initNthData(limit);
+    } else if (strcmp(problem ,"problem1B") == 0) {
         FASTAreadset_LL fasta(filePath);
-        fasta.initFullData();
+        fasta.initNthData(limit);
         FASTAreadset_LL fastaCopy(&fasta);
-    } else if (strcmp(problem ,"4") == 0) {
+    } else if (strcmp(problem ,"problem1C") == 0) {
         FASTAreadset_LL fasta(filePath);
-        fasta.initFullData();
+        fasta.initNthData(limit);
         fasta.searchSequences();
-    } else if (strcmp(problem ,"5") == 0) {
+    } else if (strcmp(problem ,"problem2D") == 0) {
         FASTAreadset_LL fasta(filePath);
         fasta.readGenomeDataset(filePath);
-    } else if (strcmp(problem ,"6") == 0) {
+    } else if (strcmp(problem ,"problem2B") == 0) {
         FASTAreadset_LL fasta("/common/contrib/classroom/inf503/hw_dataset.fa");
-        fasta.initFullData();
+        fasta.initNthData(limit);
         fasta.readGenomeDataset(filePath);
         fasta.searchGenomeDataset();
     } else {
