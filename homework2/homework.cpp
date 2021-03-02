@@ -35,7 +35,10 @@ int main(int argc, char** argv) {
         cout << "The first argument is: " << argv[0] << endl;
         cout << "The second argument is: " << argv[1] << endl;
         cout << "The third argument is: " << argv[2] << endl;
-        cout << "The fourth argument is: " << argv[2] << endl;
+        if(argv[3]) {
+            cout << "The fourth argument is: " << argv[3] << endl;
+        }
+        
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -53,22 +56,23 @@ int main(int argc, char** argv) {
     if (strcmp(problem ,"problem1A") == 0) {
         FASTAreadset_LL fasta(filePath);
         fasta.initNthData(limit);
-    } else if (strcmp(problem ,"problem1A") == 0) {
-        FASTAreadset_LL fasta(filePath);
-        fasta.initNthData(limit);
     } else if (strcmp(problem ,"problem1B") == 0) {
         FASTAreadset_LL fasta(filePath);
         fasta.initNthData(limit);
-        FASTAreadset_LL fastaCopy(&fasta);
     } else if (strcmp(problem ,"problem1C") == 0) {
         FASTAreadset_LL fasta(filePath);
         fasta.initNthData(limit);
+        FASTAreadset_LL fastaCopy(&fasta);
+    } else if (strcmp(problem ,"problem1D") == 0) {
+        FASTAreadset_LL fasta(filePath);
+        fasta.initNthData(limit);
         fasta.searchSequences();
-    } else if (strcmp(problem ,"problem2D") == 0) {
+    } else if (strcmp(problem ,"problem2A") == 0) {
         FASTAreadset_LL fasta(filePath);
         fasta.readGenomeDataset(filePath);
     } else if (strcmp(problem ,"problem2B") == 0) {
-        FASTAreadset_LL fasta("/common/contrib/classroom/inf503/hw_dataset.fa");
+        string question1Dataset = "/common/contrib/classroom/inf503/hw_dataset.fa\n";
+        FASTAreadset_LL fasta(&question1Dataset[0]);
         fasta.initNthData(limit);
         fasta.readGenomeDataset(filePath);
         fasta.searchGenomeDataset();

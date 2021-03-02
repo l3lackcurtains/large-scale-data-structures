@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include <unistd.h>
+
 // default constructor
 FASTAreadset_LL::FASTAreadset_LL() { head = NULL; genomeHead = NULL; }
 
@@ -118,7 +120,7 @@ void FASTAreadset_LL::initNthData(int limit) {
   cout << "#####################################################" << endl;
 
   // Sleep was used to capture memory used in question 2
-  // sleep(60);
+  sleep(60);
 }
 
 // Function to print the data stored in arrays
