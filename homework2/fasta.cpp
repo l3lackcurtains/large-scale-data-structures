@@ -1,6 +1,4 @@
 #include "fasta.h"
-#include <fstream>
-#include <iostream>
 
 // Helper function for the string comparision
 int strcmp(const char *a, const char *b) {
@@ -43,7 +41,6 @@ FASTAreadset_LL::FASTAreadset_LL(const FASTAreadset_LL &oldFastaReadset) {
     for (int k = 0; k < SEQUENCE_LENGTH; k++) {
       (newNode->sequenceRead)[k] = (temp->sequenceRead)[k];
     }
-    (newNode->sequenceRead)[SEQUENCE_LENGTH] = '\0';
     newNode->next = NULL;
 
     // Link new node in the linkedlist
@@ -266,7 +263,6 @@ void FASTAreadset_LL::readGenomeDataset(char *filePath, int genomeDataLimit) {
         for (int k = 0; k < SEQUENCE_LENGTH; k++) {
           newNode->sequenceRead[k] = tempRead[k];
         }
-        (newNode->sequenceRead)[SEQUENCE_LENGTH] = '\0';
         newNode->next = NULL;
         if (nodesStored == 0) {
           genomeHead = newNode;

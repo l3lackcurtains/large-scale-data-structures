@@ -20,9 +20,10 @@ Run the command:
 # Execute homework subproblems
 ################################################################################
 Run the command:
-> ./homework {question_number} /common/contrib/classroom/inf503/hw_dataset.fa {limit_36mil_dataset} {limit_genome_dataset}
+> ./homework {question_number} {dataset} {limit_36mil_dataset} {limit_genome_dataset}
 
 where
+dataset: "/common/contrib/classroom/inf503/hw_dataset.fa" for question1 and "/common/contrib/classroom/inf503/test_genome.fasta" for question 2
 question_number: { problem1A, problem1B, problem1C, problem1D, problem2A, problem2B, problem2B2 }
 limit_36mil_dataset: Limit the "/common/contrib/classroom/inf503/hw_dataset.fa" dataset. blank or "-1" for using full dataset.
 limit_genome_dataset: Limit the "/common/contrib/classroom/inf503/test_genome.fasta" dataset. blank or "-1" for using full dataset.
@@ -53,3 +54,5 @@ Example: for question 3
 ***** Note ********
 ################################################################################
 Here, problem2B2 and q2b2 refers to the alternative solution to the question 2B.
+For questions 1 use daset argument: /common/contrib/classroom/inf503/hw_dataset.fa
+For questions 2 use daset argument:/common/contrib/classroom/inf503/test_genome.fasta

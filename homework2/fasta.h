@@ -11,7 +11,7 @@
 #define SEQUENCE_LENGTH 50
 
 struct Node {
-    char sequenceRead[SEQUENCE_LENGTH + 1];
+    char sequenceRead[SEQUENCE_LENGTH];
     struct Node* next;
 };
 

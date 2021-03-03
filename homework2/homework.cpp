@@ -89,6 +89,7 @@ int main(int argc, char** argv) {
   } else if (strcmp(problem, "problem2B") == 0) {
 
     // load the 1st dataset
+    // hard coded path, because 6th argument from command line is producing error.
     string question1Dataset = "/common/contrib/classroom/inf503/hw_dataset.fa";
     FASTAreadset_LL fasta(&question1Dataset[0]);
     fasta.initNthData(limit);
