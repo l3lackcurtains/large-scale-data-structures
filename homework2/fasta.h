@@ -11,7 +11,7 @@
 #define SEQUENCE_LENGTH 50
 
 struct Node {
-    char sequenceRead[SEQUENCE_LENGTH];
+    char sequenceRead[SEQUENCE_LENGTH + 1];
     struct Node* next;
 };
 
@@ -32,7 +32,7 @@ class FASTAreadset_LL {
  public:
   FASTAreadset_LL();
   FASTAreadset_LL(char* path);
-  FASTAreadset_LL(FASTAreadset_LL* oldFastaReadset);
+  FASTAreadset_LL(const FASTAreadset_LL &oldFastaReadset);
   void readFile(char* path, int readLength);
   void readFile(int readLength);
   void initNthData(int limit);

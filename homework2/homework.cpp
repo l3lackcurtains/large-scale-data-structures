@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 
     FASTAreadset_LL fasta(filePath);
     fasta.initNthData(limit);
-    FASTAreadset_LL fastaCopy(&fasta);
+    FASTAreadset_LL fastaCopy(fasta);
 
   } else if (strcmp(problem, "problem1D") == 0) {
 

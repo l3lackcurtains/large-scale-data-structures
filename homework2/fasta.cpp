@@ -3,7 +3,7 @@
 #include <iostream>
 
 // Helper function for the string comparision
-int strcmp(char *a, char *b) {
+int strcmp(const char *a, const char *b) {
   while (*a && *a == *b) {
     ++a;
     ++b;
@@ -25,16 +25,17 @@ FASTAreadset_LL::FASTAreadset_LL(char *path) {
 }
 
 // the copy constructor
-FASTAreadset_LL::FASTAreadset_LL(FASTAreadset_LL *oldFastaReadset) {
+FASTAreadset_LL::FASTAreadset_LL(const FASTAreadset_LL &oldFastaReadset) {
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
 
   /////////////////////////////////////////////////////
   head = NULL;
+  genomeHead = NULL;
   Node *current;
   int count = 0;
-  Node *temp = oldFastaReadset->head;
+  Node *temp = oldFastaReadset.head;
   while (temp != NULL) {
 
     // Copy data to new node
@@ -42,6 +43,7 @@ FASTAreadset_LL::FASTAreadset_LL(FASTAreadset_LL *oldFastaReadset) {
     for (int k = 0; k < SEQUENCE_LENGTH; k++) {
       (newNode->sequenceRead)[k] = (temp->sequenceRead)[k];
     }
+    (newNode->sequenceRead)[SEQUENCE_LENGTH] = '\0';
     newNode->next = NULL;
 
     // Link new node in the linkedlist
@@ -264,6 +266,7 @@ void FASTAreadset_LL::readGenomeDataset(char *filePath, int genomeDataLimit) {
         for (int k = 0; k < SEQUENCE_LENGTH; k++) {
           newNode->sequenceRead[k] = tempRead[k];
         }
+        (newNode->sequenceRead)[SEQUENCE_LENGTH] = '\0';
         newNode->next = NULL;
         if (nodesStored == 0) {
           genomeHead = newNode;
@@ -406,7 +409,6 @@ FASTAreadset_LL::~FASTAreadset_LL() {
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
-
   // If linkelist of first dataset is not empty, deallocate the memory
   if (head != NULL) {
     Node *current = head;
