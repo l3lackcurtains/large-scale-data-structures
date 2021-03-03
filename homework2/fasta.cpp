@@ -229,7 +229,7 @@ void FASTAreadset_LL::searchSequences() {
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
   cout << "#####################################################" << endl;
-  printf("Time to sort search sequences: %3.3f seconds. \n", totalTime);
+  printf("Time to search the 5 sequences: %3.3f seconds. \n", totalTime);
   ;
   cout << "#####################################################" << endl;
 }
