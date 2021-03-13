@@ -4,7 +4,7 @@
 #SBATCH --output=/scratch/mp2525/linkedlist_q2b.txt	
 #SBATCH --error=/scratch/mp2525/linkedlist_q2b.err
 #SBATCH --time=1800:00
-#SBATCH --mem=10000
+#SBATCH --mem=30000
 
 module load gcc/10.2
 
