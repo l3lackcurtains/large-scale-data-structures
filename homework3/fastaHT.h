@@ -1,5 +1,5 @@
-#ifndef FASTADAT_H
-#define FASTADAT_H
+#ifndef FASTAHT_H
+#define FASTAHT_H
 
 #include <stdlib.h>
 
@@ -8,39 +8,41 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include "fastaDAT.h"
 
 // Represents the genome sequence string length
 #define SEQUENCE_LENGTH 16
 
-struct Node {
-  char sequenceRead[SEQUENCE_LENGTH];
-  struct Node* next;
+struct HashNode {
+  long unsigned int radix;
+  HashNode* next;
 };
 
 using namespace std;
 
-class FASTAreadset_DA {
+class FASTAreadset_Chain {
  private:
+  int hashTableSize;
   int collisionCount;
-  int elementsStored;
-  long unsigned int calculateRadix(char* sequence);
-  bool* boolArray;
-  long unsigned int boolArraySize;
   int datasetCount;
+  int elementsStored;
+  HashNode** hashTable;
+  long unsigned int calculateRadix(char* sequence);
+  void insertInHashTable(long unsigned int key);
   Node* genomeHead;
 
  public:
-  FASTAreadset_DA();
-  ~FASTAreadset_DA();
+  FASTAreadset_Chain(int hashSize);
+  ~FASTAreadset_Chain();
   void readFile(char* path);
   void insertData(char* sequence);
-  bool searchSequence(char* sequence);
-  void readGenomeDataset(char* filePath);
-  void searchAllGenomeSequences();
   int getElementsStored();
   int getCollisions();
   int getTotalDataset();
   int getHashTableSize();
+  bool searchSequence(char* sequence);
+  void readGenomeDataset(char* filePath);
+  void searchAllGenomeSequences();
 };
 
 #endif

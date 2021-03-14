@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include "./fastaDAT.h"
+#include "./fastaHT.h"
 
 using namespace std;
 
@@ -36,6 +37,9 @@ int main(int argc, char** argv) {
     cout << "The first argument is: " << argv[0] << endl;
     cout << "The second argument is: " << argv[1] << endl;
     cout << "The third argument is: " << argv[2] << endl;
+    if (argv[3]) {
+      cout << "The fourth argument is: " << argv[3] << endl;
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -45,42 +49,92 @@ int main(int argc, char** argv) {
   cout << "/////////////////////////////////////////////////////" << endl;
   char* problem = new char[10];
   char* filePath = new char[100];
+  char* filePath2 = new char[100];
   problem = argv[1];
   filePath = argv[2];
+  if (argv[3]) filePath2 = argv[3];
 
-  if (strcmp(problem, "problem1A") == 0) {
+  FASTAreadset_DA fasta = FASTAreadset_DA();
 
-    FASTAreadset_DA fasta(filePath);
+  if (strcmp(problem, "problem1Aa") == 0) {
+    fasta.readFile(filePath);
+    cout << "Size of Hash Table: " << fasta.getHashTableSize() << " GB" << endl;
+    
 
-  } else if (strcmp(problem, "problem1B") == 0) {
+  } else if (strcmp(problem, "problem1Ab") == 0) {
 
-    FASTAreadset_DA fasta(filePath);
-    int x = fasta.getElementsStored();
-    int y = fasta.getCollisions();
+    fasta.readFile(filePath);
+    int collisions = fasta.getCollisions();
+    cout << "Total collsions: " << collisions << endl;
 
-    cout << "Elements stored: " << x << endl;
-    cout << "Total collsions: " << y << endl;
+  } else if (strcmp(problem, "problem1Ac") == 0) {
 
-  } else if (strcmp(problem, "problem1C") == 0) {
+    fasta.readFile(filePath);
+    int unique = fasta.getElementsStored();
+    cout << "Elements stored: " << unique << endl;
 
-    FASTAreadset_DA fasta(filePath);
+  } else if (strcmp(problem, "problem1Ba") == 0) {
+
+    fasta.readFile(filePath);
+    fasta.readGenomeDataset(filePath2);
+
+  } else if (strcmp(problem, "problem1Bb") == 0) {
+
+    fasta.readFile(filePath);
+    fasta.readGenomeDataset(filePath2);
+    fasta.searchAllGenomeSequences();
+
+  } else if (strcmp(problem, "problem2Aa") == 0) {
+
+    FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000);
+    cfasta.readFile(filePath);
+    int collisions = cfasta.getCollisions();
+    cout << "Total collsions in 10k hash Table: " << collisions << endl;
+
+    FASTAreadset_Chain cfasta2 = FASTAreadset_Chain(100000);
+    cfasta2.readFile(filePath);
+    collisions = cfasta2.getCollisions();
+    cout << "Total collsions in 100k hash Table: " << collisions << endl;
+
+    FASTAreadset_Chain cfasta3 = FASTAreadset_Chain(1000000);
+    cfasta3.readFile(filePath);
+    collisions = cfasta3.getCollisions();
+    cout << "Total collsions in 1m hash Table: " << collisions << endl;
+
+    FASTAreadset_Chain cfasta4 = FASTAreadset_Chain(10000000);
+    cfasta4.readFile(filePath);
+    collisions = cfasta4.getCollisions();
+    cout << "Total collsions in 10m hash Table: " << collisions << endl;
 
 
-  } else if (strcmp(problem, "problem1D") == 0) {
+  } else if (strcmp(problem, "problem2Ab") == 0) {
 
-    FASTAreadset_DA fasta(filePath);
+    FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000);
+    cfasta.readFile(filePath);
 
-  } else if (strcmp(problem, "problem2A") == 0) {
+    FASTAreadset_Chain cfasta2 = FASTAreadset_Chain(100000);
+    cfasta2.readFile(filePath);
 
-    FASTAreadset_DA fasta(filePath);
+    FASTAreadset_Chain cfasta3 = FASTAreadset_Chain(1000000);
+    cfasta3.readFile(filePath);
 
-  } else if (strcmp(problem, "problem2B") == 0) {
+    FASTAreadset_Chain cfasta4 = FASTAreadset_Chain(10000000);
+    cfasta4.readFile(filePath);
 
+  } else if (strcmp(problem, "problem2Ba") == 0) {
 
-  } else if (strcmp(problem, "problem2B2") == 0) {
+    FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000000);
+    cfasta.readFile(filePath);
+    cfasta.readGenomeDataset(filePath2);
 
+  } else if (strcmp(problem, "problem2Bb") == 0) {
 
-  } else {
+    FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000000);
+    cfasta.readFile(filePath);
+    cfasta.readGenomeDataset(filePath2);
+    cfasta.searchAllGenomeSequences();
+
+  }  else {
 
     cout << "[Error] Invalid Option number." << endl;
     

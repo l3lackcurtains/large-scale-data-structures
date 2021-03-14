@@ -1,48 +1,40 @@
-#include "fastaDAT.h"
+#include "fastaHT.h"
 
-// Helper function for the string comparision
-int strcmp(const char *a, const char *b) {
-  while (*a && *a == *b) {
-    ++a;
-    ++b;
-  }
-  return (int)(unsigned char)(*a) - (int)(unsigned char)(*b);
-}
-
-FASTAreadset_DA::FASTAreadset_DA() {
+FASTAreadset_Chain::FASTAreadset_Chain(int hashSize) {
   collisionCount = 0;
   elementsStored = 0;
   datasetCount = 0;
+  hashTableSize = hashSize;
 
-  boolArraySize = pow(4, 16);
-  boolArray = new bool[boolArraySize];
+  hashTable = new HashNode *[hashTableSize];
 
-  for (long unsigned int x = 0; x < boolArraySize; x++) {
-    boolArray[x] = false;
+  for (int i = 0; i < hashTableSize; i++) {
+    hashTable[i] = NULL;
   }
 }
 
-void FASTAreadset_DA::insertData(char* sequence) {
+void FASTAreadset_Chain::insertData(char* sequence) {
   unsigned int radixValue = calculateRadix(sequence);
-  if (boolArray[radixValue]) {
-    collisionCount++;
-  } else {
-    boolArray[radixValue] = true;
-  }
+    insertInHashTable(radixValue);
 }
 
-void FASTAreadset_DA::readFile(char *path) {
+void FASTAreadset_Chain::readFile(char *path) {
+  clock_t startTime, endTime;
+  float totalTime = 0.0;
+  startTime = clock();
+
+  /////////////////////////////////////////////////////////////////
   ifstream input;
   input.open(path);
   char *tempHeader = new char[100];
   char *tempRead = new char[SEQUENCE_LENGTH];
- 
+  long unsigned int radixValue;
   int tempCount = -1;
   while (!input.eof()) {
     tempCount++;
     input >> tempHeader;
     input >> tempRead;
-    insertData(tempRead);
+    insertData(tempRead);    
   }
   datasetCount = tempCount;
 
@@ -51,10 +43,34 @@ void FASTAreadset_DA::readFile(char *path) {
   delete[] tempRead;
   delete[] tempHeader;
   input.close();
+
+  //////////////////////////////////////////////////////////////////
+  endTime = clock();
+  totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+  cout << "#####################################################" << endl;
+  printf("Time to store sequences in %d size Hash Table: %3.3f seconds. \n",
+         hashTableSize, totalTime);
+  ;
+  cout << "#####################################################" << endl;
 }
 
-long unsigned int FASTAreadset_DA::calculateRadix(char *sequence) {
-  long unsigned int radixVal = 0;
+void FASTAreadset_Chain::insertInHashTable(long unsigned int key) {
+  int index = key % hashTableSize;
+  HashNode *temp = hashTable[index];
+  HashNode *entry = new HashNode;
+  entry->radix = key;
+  entry->next = NULL;
+  if (temp == NULL) {
+    hashTable[index] = entry;
+  } else {
+    collisionCount++;
+    hashTable[index] = entry;
+    entry->next = temp;
+  }
+}
+
+long unsigned int FASTAreadset_Chain::calculateRadix(char *sequence) {
+  unsigned int radixVal = 0;
   int i = SEQUENCE_LENGTH - 1;
   int pos = 0;
   char current;
@@ -85,28 +101,37 @@ long unsigned int FASTAreadset_DA::calculateRadix(char *sequence) {
   return radixVal;
 }
 
-int FASTAreadset_DA::getElementsStored() { return elementsStored; }
+int FASTAreadset_Chain::getElementsStored() { return elementsStored; }
 
-int FASTAreadset_DA::getCollisions() { return collisionCount; }
+int FASTAreadset_Chain::getCollisions() { return collisionCount; }
 
-int FASTAreadset_DA::getTotalDataset() { return datasetCount; }
+int FASTAreadset_Chain::getTotalDataset() { return datasetCount; }
 
-int FASTAreadset_DA::getHashTableSize() {
-  return (boolArraySize / (1024 * 1024 * 1024));
-}
-
-bool FASTAreadset_DA::searchSequence(char *sequence) {
+bool FASTAreadset_Chain::searchSequence(char *sequence) {
   long unsigned int radixValue = calculateRadix(sequence);
-  return boolArray[radixValue];
+  int index = radixValue % hashTableSize;
+  HashNode *current = hashTable[index];
+  if (current == NULL) {
+    return false;
+  }
+
+  bool found = false;
+  while (current != NULL) {
+    if (current->radix == radixValue) {
+      found = true;
+      break;
+    }
+    current = current->next;
+  }
+  return found;
 }
 
-void FASTAreadset_DA::searchAllGenomeSequences() {
+void FASTAreadset_Chain::searchAllGenomeSequences() {
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
-
   Node *current = genomeHead;
   int count = 0;
   int total = 0;
@@ -128,7 +153,7 @@ void FASTAreadset_DA::searchAllGenomeSequences() {
   cout << "#####################################################" << endl;
 }
 
-void FASTAreadset_DA::readGenomeDataset(char *filePath) {
+void FASTAreadset_Chain::readGenomeDataset(char *filePath) {
   ifstream input;
   input.open(filePath);
   char *tempRead;
@@ -180,26 +205,30 @@ void FASTAreadset_DA::readGenomeDataset(char *filePath) {
 }
 
 // Destroy function to deallocate headerNumber and read arrays
-FASTAreadset_DA::~FASTAreadset_DA() {
+FASTAreadset_Chain::~FASTAreadset_Chain() {
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
 
-  delete[] boolArray;
+  for (int i = 0; i < hashTableSize; i++) {
+    HashNode *head = hashTable[i];
+    if (head != NULL) {
+      HashNode *current = head;
+      HashNode *next = NULL;
 
-  if (genomeHead != NULL) {
-    Node *current = genomeHead;
-    Node *next = NULL;
-
-    while (current != NULL) {
-      next = current->next;
-      free(current);
-      current = next;
+      while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+      }
+      head = NULL;
     }
-    genomeHead = NULL;
+    delete head;
   }
+
+  delete[] hashTable;
 
   //////////////////////////////////////////////////////////////////
 
