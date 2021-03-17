@@ -1,5 +1,6 @@
 #include "fastaHT.h"
 
+// Default constructor
 FASTAreadset_Chain::FASTAreadset_Chain(int hashSize) {
   collisionCount = 0;
   elementsStored = 0;
@@ -13,11 +14,14 @@ FASTAreadset_Chain::FASTAreadset_Chain(int hashSize) {
   }
 }
 
+// Helper function to insert data in hash table
 void FASTAreadset_Chain::insertData(char* sequence) {
   unsigned int radixValue = calculateRadix(sequence);
-    insertInHashTable(radixValue);
+  insertInHashTable(radixValue);
+  datasetCount++;
 }
 
+// Function to read the file
 void FASTAreadset_Chain::readFile(char *path) {
   clock_t startTime, endTime;
   float totalTime = 0.0;
@@ -29,14 +33,11 @@ void FASTAreadset_Chain::readFile(char *path) {
   char *tempHeader = new char[100];
   char *tempRead = new char[SEQUENCE_LENGTH];
   long unsigned int radixValue;
-  int tempCount = -1;
   while (!input.eof()) {
-    tempCount++;
     input >> tempHeader;
     input >> tempRead;
     insertData(tempRead);    
   }
-  datasetCount = tempCount;
 
   elementsStored = datasetCount - collisionCount;
 
@@ -54,6 +55,7 @@ void FASTAreadset_Chain::readFile(char *path) {
   cout << "#####################################################" << endl;
 }
 
+// FUnction to insert data in hash table
 void FASTAreadset_Chain::insertInHashTable(long unsigned int key) {
   int index = key % hashTableSize;
   HashNode *temp = hashTable[index];
@@ -69,6 +71,7 @@ void FASTAreadset_Chain::insertInHashTable(long unsigned int key) {
   }
 }
 
+// Helper function to calculate the radix from sequence
 long unsigned int FASTAreadset_Chain::calculateRadix(char *sequence) {
   unsigned int radixVal = 0;
   int i = SEQUENCE_LENGTH - 1;
@@ -101,12 +104,16 @@ long unsigned int FASTAreadset_Chain::calculateRadix(char *sequence) {
   return radixVal;
 }
 
+// Helper function to get total elements stored
 int FASTAreadset_Chain::getElementsStored() { return elementsStored; }
 
+// Helper function to get total collisions
 int FASTAreadset_Chain::getCollisions() { return collisionCount; }
 
+// Helper function to get total dataset count
 int FASTAreadset_Chain::getTotalDataset() { return datasetCount; }
 
+// Function to search single genome sequence
 bool FASTAreadset_Chain::searchSequence(char *sequence) {
   long unsigned int radixValue = calculateRadix(sequence);
   int index = radixValue % hashTableSize;
@@ -126,6 +133,7 @@ bool FASTAreadset_Chain::searchSequence(char *sequence) {
   return found;
 }
 
+// Function to search all genome sequences
 void FASTAreadset_Chain::searchAllGenomeSequences() {
   clock_t startTime, endTime;
   float totalTime = 0.0;
@@ -153,6 +161,7 @@ void FASTAreadset_Chain::searchAllGenomeSequences() {
   cout << "#####################################################" << endl;
 }
 
+// Function to read the genome database from file path
 void FASTAreadset_Chain::readGenomeDataset(char *filePath) {
   ifstream input;
   input.open(filePath);
@@ -204,7 +213,7 @@ void FASTAreadset_Chain::readGenomeDataset(char *filePath) {
   input.close();
 }
 
-// Destroy function to deallocate headerNumber and read arrays
+// Destroy function to deallocate all data structures
 FASTAreadset_Chain::~FASTAreadset_Chain() {
   clock_t startTime, endTime;
   float totalTime = 0.0;

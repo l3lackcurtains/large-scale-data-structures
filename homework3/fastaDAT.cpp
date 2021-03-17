@@ -1,14 +1,6 @@
 #include "fastaDAT.h"
 
-// Helper function for the string comparision
-int strcmp(const char *a, const char *b) {
-  while (*a && *a == *b) {
-    ++a;
-    ++b;
-  }
-  return (int)(unsigned char)(*a) - (int)(unsigned char)(*b);
-}
-
+// Default constructor
 FASTAreadset_DA::FASTAreadset_DA() {
   collisionCount = 0;
   elementsStored = 0;
@@ -22,6 +14,7 @@ FASTAreadset_DA::FASTAreadset_DA() {
   }
 }
 
+// Helper function to insert data in hash table
 void FASTAreadset_DA::insertData(char* sequence) {
   unsigned int radixValue = calculateRadix(sequence);
   if (boolArray[radixValue]) {
@@ -29,22 +22,21 @@ void FASTAreadset_DA::insertData(char* sequence) {
   } else {
     boolArray[radixValue] = true;
   }
+  datasetCount++;
 }
 
+// Function to read the file
 void FASTAreadset_DA::readFile(char *path) {
   ifstream input;
   input.open(path);
   char *tempHeader = new char[100];
   char *tempRead = new char[SEQUENCE_LENGTH];
  
-  int tempCount = -1;
   while (!input.eof()) {
-    tempCount++;
     input >> tempHeader;
     input >> tempRead;
     insertData(tempRead);
   }
-  datasetCount = tempCount;
 
   elementsStored = datasetCount - collisionCount;
 
@@ -53,6 +45,7 @@ void FASTAreadset_DA::readFile(char *path) {
   input.close();
 }
 
+// Helper function to calculate the radix from sequence
 long unsigned int FASTAreadset_DA::calculateRadix(char *sequence) {
   long unsigned int radixVal = 0;
   int i = SEQUENCE_LENGTH - 1;
@@ -85,21 +78,27 @@ long unsigned int FASTAreadset_DA::calculateRadix(char *sequence) {
   return radixVal;
 }
 
+// Helper function to get total elements stored
 int FASTAreadset_DA::getElementsStored() { return elementsStored; }
 
+// Helper function to get total collisions
 int FASTAreadset_DA::getCollisions() { return collisionCount; }
 
+// Helper function to get total dataset count
 int FASTAreadset_DA::getTotalDataset() { return datasetCount; }
 
+// Helper function to get hash table size
 int FASTAreadset_DA::getHashTableSize() {
-  return (boolArraySize / (1024 * 1024 * 1024));
+  return (boolArraySize / (1024 * 1024 * 1024.0));
 }
 
+// Function to search single genome sequence
 bool FASTAreadset_DA::searchSequence(char *sequence) {
   long unsigned int radixValue = calculateRadix(sequence);
   return boolArray[radixValue];
 }
 
+// Function to search all genome sequences
 void FASTAreadset_DA::searchAllGenomeSequences() {
   clock_t startTime, endTime;
   float totalTime = 0.0;
@@ -128,6 +127,7 @@ void FASTAreadset_DA::searchAllGenomeSequences() {
   cout << "#####################################################" << endl;
 }
 
+// Function to read the genome database from file path
 void FASTAreadset_DA::readGenomeDataset(char *filePath) {
   ifstream input;
   input.open(filePath);
@@ -179,7 +179,7 @@ void FASTAreadset_DA::readGenomeDataset(char *filePath) {
   input.close();
 }
 
-// Destroy function to deallocate headerNumber and read arrays
+// Destroy function to deallocate all data structures
 FASTAreadset_DA::~FASTAreadset_DA() {
   clock_t startTime, endTime;
   float totalTime = 0.0;

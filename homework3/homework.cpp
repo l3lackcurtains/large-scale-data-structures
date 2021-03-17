@@ -56,78 +56,52 @@ int main(int argc, char** argv) {
 
   FASTAreadset_DA fasta = FASTAreadset_DA();
 
-  if (strcmp(problem, "problem1Aa") == 0) {
+  if (strcmp(problem, "problem1A") == 0) {
+    
     fasta.readFile(filePath);
+    
     cout << "Size of Hash Table: " << fasta.getHashTableSize() << " GB" << endl;
+    cout << "Total sequences: " << fasta.getTotalDataset() << endl;
+    cout << "Unique sequences: " << fasta.getElementsStored() << endl;
+    cout << "Total collsions: " << fasta.getCollisions() << endl;    
     
 
-  } else if (strcmp(problem, "problem1Ab") == 0) {
+  } else if (strcmp(problem, "problem1B") == 0) {
 
     fasta.readFile(filePath);
-    int collisions = fasta.getCollisions();
-    cout << "Total collsions: " << collisions << endl;
 
-  } else if (strcmp(problem, "problem1Ac") == 0) {
-
-    fasta.readFile(filePath);
-    int unique = fasta.getElementsStored();
-    cout << "Elements stored: " << unique << endl;
-
-  } else if (strcmp(problem, "problem1Ba") == 0) {
-
-    fasta.readFile(filePath);
-    fasta.readGenomeDataset(filePath2);
-
-  } else if (strcmp(problem, "problem1Bb") == 0) {
-
-    fasta.readFile(filePath);
     fasta.readGenomeDataset(filePath2);
     fasta.searchAllGenomeSequences();
 
-  } else if (strcmp(problem, "problem2Aa") == 0) {
+
+  } else if (strcmp(problem, "problem2A") == 0) {
 
     FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000);
     cfasta.readFile(filePath);
+
     int collisions = cfasta.getCollisions();
-    cout << "Total collsions in 10k hash Table: " << collisions << endl;
+    cout << "Total collsions in 10,000 hash Table: " << collisions << endl;
 
     FASTAreadset_Chain cfasta2 = FASTAreadset_Chain(100000);
     cfasta2.readFile(filePath);
+
     collisions = cfasta2.getCollisions();
-    cout << "Total collsions in 100k hash Table: " << collisions << endl;
+    cout << "Total collsions in 100,000 hash Table: " << collisions << endl;
 
     FASTAreadset_Chain cfasta3 = FASTAreadset_Chain(1000000);
     cfasta3.readFile(filePath);
+
     collisions = cfasta3.getCollisions();
-    cout << "Total collsions in 1m hash Table: " << collisions << endl;
+    cout << "Total collsions in 1,000,000 hash Table: " << collisions << endl;
 
     FASTAreadset_Chain cfasta4 = FASTAreadset_Chain(10000000);
     cfasta4.readFile(filePath);
+
     collisions = cfasta4.getCollisions();
-    cout << "Total collsions in 10m hash Table: " << collisions << endl;
+    cout << "Total collsions in 10,000,000 hash Table: " << collisions << endl;
 
 
-  } else if (strcmp(problem, "problem2Ab") == 0) {
-
-    FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000);
-    cfasta.readFile(filePath);
-
-    FASTAreadset_Chain cfasta2 = FASTAreadset_Chain(100000);
-    cfasta2.readFile(filePath);
-
-    FASTAreadset_Chain cfasta3 = FASTAreadset_Chain(1000000);
-    cfasta3.readFile(filePath);
-
-    FASTAreadset_Chain cfasta4 = FASTAreadset_Chain(10000000);
-    cfasta4.readFile(filePath);
-
-  } else if (strcmp(problem, "problem2Ba") == 0) {
-
-    FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000000);
-    cfasta.readFile(filePath);
-    cfasta.readGenomeDataset(filePath2);
-
-  } else if (strcmp(problem, "problem2Bb") == 0) {
+  } else if (strcmp(problem, "problem2B") == 0) {
 
     FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000000);
     cfasta.readFile(filePath);

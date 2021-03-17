@@ -13,6 +13,7 @@
 // Represents the genome sequence string length
 #define SEQUENCE_LENGTH 16
 
+// Data structure used in the Hash table
 struct HashNode {
   long unsigned int radix;
   HashNode* next;
