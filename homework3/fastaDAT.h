@@ -41,6 +41,7 @@ class FASTAreadset_DA {
   int getCollisions();
   int getTotalDataset();
   int getHashTableSize();
+  double getLoadFactor();
 };
 
 #endif

@@ -15,7 +15,7 @@ FASTAreadset_DA::FASTAreadset_DA() {
 }
 
 // Helper function to insert data in hash table
-void FASTAreadset_DA::insertData(char *sequence) {
+void FASTAreadset_DA::insertData(char* sequence) {
   unsigned int radixValue = calculateRadix(sequence);
   if (boolArray[radixValue]) {
     collisionCount++;
@@ -31,7 +31,7 @@ void FASTAreadset_DA::readFile(char *path) {
   input.open(path);
   char *tempHeader = new char[100];
   char *tempRead = new char[SEQUENCE_LENGTH];
-
+ 
   while (!input.eof()) {
     input >> tempHeader;
     input >> tempRead;
@@ -89,7 +89,12 @@ int FASTAreadset_DA::getTotalDataset() { return datasetCount; }
 
 // Helper function to get hash table size
 int FASTAreadset_DA::getHashTableSize() {
-  return (boolArraySize / (1024 * 1024 * 1024.0));
+  return ((sizeof(bool) * boolArraySize) / (1024 * 1024 * 1024.0));
+}
+
+// Helper function to get load factor
+double FASTAreadset_DA::getLoadFactor() {
+  return (1.0 * elementsStored)/boolArraySize;
 }
 
 // Function to search single genome sequence
@@ -186,6 +191,7 @@ FASTAreadset_DA::~FASTAreadset_DA() {
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
+
   delete[] boolArray;
 
   if (genomeHead != NULL) {
@@ -199,6 +205,7 @@ FASTAreadset_DA::~FASTAreadset_DA() {
     }
     genomeHead = NULL;
   }
+
   //////////////////////////////////////////////////////////////////
 
   endTime = clock();
