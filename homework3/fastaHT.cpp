@@ -15,7 +15,7 @@ FASTAreadset_Chain::FASTAreadset_Chain(int hashSize) {
 }
 
 // Helper function to insert data in hash table
-void FASTAreadset_Chain::insertData(char* sequence) {
+void FASTAreadset_Chain::insertData(char *sequence) {
   unsigned int radixValue = calculateRadix(sequence);
   insertInHashTable(radixValue);
   datasetCount++;
@@ -36,7 +36,7 @@ void FASTAreadset_Chain::readFile(char *path) {
   while (!input.eof()) {
     input >> tempHeader;
     input >> tempRead;
-    insertData(tempRead);    
+    insertData(tempRead);
   }
 
   elementsStored = datasetCount - collisionCount;
@@ -220,7 +220,6 @@ FASTAreadset_Chain::~FASTAreadset_Chain() {
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
-
   for (int i = 0; i < hashTableSize; i++) {
     HashNode *head = hashTable[i];
     if (head != NULL) {
@@ -238,7 +237,6 @@ FASTAreadset_Chain::~FASTAreadset_Chain() {
   }
 
   delete[] hashTable;
-
   //////////////////////////////////////////////////////////////////
 
   endTime = clock();

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 #include <math.h>
-#include "fastaDAT.h"
+#include "fastaDAT.h" // used (struct Node)
 
 // Represents the genome sequence string length
 #define SEQUENCE_LENGTH 16

@@ -57,25 +57,20 @@ int main(int argc, char** argv) {
   FASTAreadset_DA fasta = FASTAreadset_DA();
 
   if (strcmp(problem, "problem1A") == 0) {
-    
     fasta.readFile(filePath);
-    
+
     cout << "Size of Hash Table: " << fasta.getHashTableSize() << " GB" << endl;
     cout << "Total sequences: " << fasta.getTotalDataset() << endl;
     cout << "Unique sequences: " << fasta.getElementsStored() << endl;
-    cout << "Total collsions: " << fasta.getCollisions() << endl;    
-    
+    cout << "Total collsions: " << fasta.getCollisions() << endl;
 
   } else if (strcmp(problem, "problem1B") == 0) {
-
     fasta.readFile(filePath);
 
     fasta.readGenomeDataset(filePath2);
     fasta.searchAllGenomeSequences();
 
-
   } else if (strcmp(problem, "problem2A") == 0) {
-
     FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000);
     cfasta.readFile(filePath);
 
@@ -100,18 +95,14 @@ int main(int argc, char** argv) {
     collisions = cfasta4.getCollisions();
     cout << "Total collsions in 10,000,000 hash Table: " << collisions << endl;
 
-
   } else if (strcmp(problem, "problem2B") == 0) {
-
     FASTAreadset_Chain cfasta = FASTAreadset_Chain(10000000);
     cfasta.readFile(filePath);
     cfasta.readGenomeDataset(filePath2);
     cfasta.searchAllGenomeSequences();
 
-  }  else {
-
+  } else {
     cout << "[Error] Invalid Option number." << endl;
-    
   }
 
   cout << "/////////////////////////////////////////////////////" << endl;

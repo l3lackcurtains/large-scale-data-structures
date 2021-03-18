@@ -15,7 +15,7 @@ FASTAreadset_DA::FASTAreadset_DA() {
 }
 
 // Helper function to insert data in hash table
-void FASTAreadset_DA::insertData(char* sequence) {
+void FASTAreadset_DA::insertData(char *sequence) {
   unsigned int radixValue = calculateRadix(sequence);
   if (boolArray[radixValue]) {
     collisionCount++;
@@ -31,7 +31,7 @@ void FASTAreadset_DA::readFile(char *path) {
   input.open(path);
   char *tempHeader = new char[100];
   char *tempRead = new char[SEQUENCE_LENGTH];
- 
+
   while (!input.eof()) {
     input >> tempHeader;
     input >> tempRead;
@@ -186,7 +186,6 @@ FASTAreadset_DA::~FASTAreadset_DA() {
   startTime = clock();
 
   /////////////////////////////////////////////////////////////////
-
   delete[] boolArray;
 
   if (genomeHead != NULL) {
@@ -200,7 +199,6 @@ FASTAreadset_DA::~FASTAreadset_DA() {
     }
     genomeHead = NULL;
   }
-
   //////////////////////////////////////////////////////////////////
 
   endTime = clock();
