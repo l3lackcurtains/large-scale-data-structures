@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.cu": "cuda",
+        "*.cuh": "cuda",
+        "algorithm": "cpp",
+        "xutility": "cpp",
+        "iostream": "cpp",
+        "ostream": "cpp"
+    }
+}
