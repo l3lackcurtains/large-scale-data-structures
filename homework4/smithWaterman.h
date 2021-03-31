@@ -30,6 +30,6 @@ char** readTestSequencesFromFile(char* filePath);
 
 char** generateRandomSequences(int sequencesCount);
 
-void testWithRandomSequences(char* sequence, int sequencesCount);
+void testSubjectWithRandomSequences(char* sequence, int sequencesCount);
 
 #endif

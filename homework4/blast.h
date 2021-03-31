@@ -18,19 +18,19 @@ class BLAST {
   int subjectSequenceSize;
   long unsigned int calculateRadix(char* sequence);
   void insertInHashTable(long unsigned int key, int position);
+  int* getExtendSubjectPositions(char* querySequence, int queryPosition,
+                                 int sequencePosition);
 
  public:
   BLAST(int hashSize);
   ~BLAST();
-  void start();
   void insertData(char* sequence, int position);
   int findMatch(char* sequence);
-  void searchSequence(char* sequence, bool doPrint);
-  void readGenomeDataset(char* filePath);
-  void searchAllGenomeSequences();
-  int* getExtendSequencePositions(char* querySequence, int queryPosition,
-                                  int sequencePosition);
-  void testWithRandomSequences(int sequencesLimit, bool doPrint);
+  int startBlast(char* sequence, bool doPrint);
+  void readSubjectSequencesFromFile(char* filePath);
+  void testSubjectWithRandomSequences(int sequencesLimit, bool doPrint);
+  char* generateRandomSequenceFromSubject();
+  char* generateRandomSequenceFromSubjectWithError(float errorRate);
 };
 
 #endif

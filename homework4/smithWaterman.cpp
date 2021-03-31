@@ -200,10 +200,6 @@ char **readTestSequencesFromFile(char *filePath) {
 
 char **generateRandomSequences(int sequencesCount) {
   int randomNumber;
-
-  time_t t;
-  srand((unsigned)time(&t));
-
   char **sequences = (char **)malloc(sizeof(char *) * sequencesCount);
   for (int x = 0; x < sequencesCount; x++) {
     sequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
@@ -235,7 +231,7 @@ char **generateRandomSequences(int sequencesCount) {
   return sequences;
 }
 
-void testWithRandomSequences(char *sequence, int sequencesCount) {
+void testSubjectWithRandomSequences(char *sequence, int sequencesCount) {
   char **sequences;
   sequences = (char **)malloc(sizeof(char *) * sequencesCount);
   for (int x = 0; x < sequencesCount; x++) {

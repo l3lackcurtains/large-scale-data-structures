@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
   filePath = argv[2];
   if (argv[3]) filePath2 = argv[3];
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////
   if (strcmp(problem, "problem1A") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     char *sequence;
@@ -72,60 +73,90 @@ int main(int argc, char **argv) {
     sequence = readSequenceFromFile(filePath);
     // # 1k sequences
     int sequencesCount = 1000;
-    testWithRandomSequences(sequence, sequencesCount);
+    testSubjectWithRandomSequences(sequence, sequencesCount);
 
     // # 10k sequences
     sequencesCount = 10000;
-    testWithRandomSequences(sequence, sequencesCount);
+    testSubjectWithRandomSequences(sequence, sequencesCount);
 
     // # 100k sequences
     sequencesCount = 100000;
-    testWithRandomSequences(sequence, sequencesCount);
+    testSubjectWithRandomSequences(sequence, sequencesCount);
 
     // # 1m sequences
     sequencesCount = 1000000;
-    testWithRandomSequences(sequence, sequencesCount);
+    testSubjectWithRandomSequences(sequence, sequencesCount);
 
     free(sequence);
     /////////////////////////////////////////////////////////////////////////////////////////////////
   } else if (strcmp(problem, "problem2A") == 0) {
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     char **testSequences = (char **)malloc(sizeof(char *) * TEST_LENGTH);
     for (int x = 0; x < TEST_LENGTH; x++) {
       testSequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
     }
 
     BLAST blast = BLAST(10000);
-    blast.readGenomeDataset(filePath);
+    blast.readSubjectSequencesFromFile(filePath);
     testSequences = readTestSequencesFromFile(filePath2);
     cout << "################################################################"
-            "###"
          << endl;
     for (int x = 0; x < TEST_LENGTH; x++) {
       cout << "TEST SEQUENCE " << x << endl;
-      blast.searchSequence(testSequences[x], true);
+      blast.startBlast(testSequences[x], true);
       cout << "################################################################"
-              "###"
            << endl;
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
   } else if (strcmp(problem, "problem2B") == 0) {
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     BLAST blast = BLAST(10000);
-    blast.readGenomeDataset(filePath);
+    blast.readSubjectSequencesFromFile(filePath);
 
     // # 1k sequences
     int sequencesCount = 1000;
-    blast.testWithRandomSequences(sequencesCount, false);
+    blast.testSubjectWithRandomSequences(sequencesCount, false);
 
     // # 10k sequences
     sequencesCount = 10000;
-    blast.testWithRandomSequences(sequencesCount, false);
+    blast.testSubjectWithRandomSequences(sequencesCount, false);
 
     // # 100k sequences
     sequencesCount = 100000;
-    blast.testWithRandomSequences(sequencesCount, false);
+    blast.testSubjectWithRandomSequences(sequencesCount, false);
 
     // # 1m sequences
     sequencesCount = 1000000;
-    blast.testWithRandomSequences(sequencesCount, false);
+    blast.testSubjectWithRandomSequences(sequencesCount, false);
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+  } else if (strcmp(problem, "problem2C") == 0) {
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    int totalSequences = 100;
+    char **testSequences = (char **)malloc(sizeof(char *) * totalSequences);
+    for (int x = 0; x < totalSequences; x++) {
+      testSequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
+    }
+
+    BLAST blast = BLAST(10000);
+    blast.readSubjectSequencesFromFile(filePath);
+
+    int totalFound = 0;
+    char *sequence;
+    sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
+    for (int x = 0; x < totalSequences; x++) {
+      sequence = blast.generateRandomSequenceFromSubject();
+      totalFound += blast.startBlast(sequence, false);
+    }
+    cout << "Total Random Sequences Found: " << totalFound << endl;
+
+    totalFound = 0;
+    for (int x = 0; x < totalSequences; x++) {
+      sequence = blast.generateRandomSequenceFromSubjectWithError(5.0);
+      totalFound += blast.startBlast(sequence, false);
+    }
+    cout << "Total Random Sequences Found (5% Error): " << totalFound << endl;
+    free(sequence);
+    /////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
   return 0;

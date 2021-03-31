@@ -4,6 +4,7 @@
 #include "smithWaterman.h"
 
 BLAST::BLAST(int hashSize) {
+  srand(time(NULL));
   datasetCount = 0;
   hashTableSize = hashSize;
 
@@ -92,7 +93,7 @@ int BLAST::findMatch(char *sequence) {
   return found;
 }
 
-void BLAST::readGenomeDataset(char *filePath) {
+void BLAST::readSubjectSequencesFromFile(char *filePath) {
   ifstream input;
   input.open(filePath);
   char c = '\0';
@@ -134,75 +135,8 @@ void BLAST::readGenomeDataset(char *filePath) {
   cout << "Initialized " << nodesStored << " 11-mers sequences." << endl;
 }
 
-void BLAST::searchSequence(char *sequence, bool doPrint) {
-  char *tempRead;
-  tempRead = new char[SPLIT_SEQUENCE_LENGTH];
-  int characterCount = 0;
-  int nodesStored = 0;
-  int foundSubject = -1;
-  int foundQuery = -1;
-  for (int x = 0; x < SEQUENCE_LENGTH; x++) {
-    char c = sequence[x];
-    tempRead[characterCount] = c;
-    characterCount++;
-    if (characterCount == SPLIT_SEQUENCE_LENGTH) {
-      foundSubject = findMatch(tempRead);
-
-      if (foundSubject > -1) {
-        foundQuery = nodesStored;
-        break;
-      }
-
-      nodesStored++;
-      characterCount = SPLIT_SEQUENCE_LENGTH - 1;
-      for (int i = 1; i < SPLIT_SEQUENCE_LENGTH; i++) {
-        tempRead[i - 1] = tempRead[i];
-      }
-    }
-  }
-
-  if (foundQuery == -1) {
-    if (doPrint) cout << "No Match found" << endl;
-    return;
-  }
-
-  /*
-  cout << "QUERY     SUBJECT" << endl;
-  cout << foundQuery << "        " << foundSubject << endl;
-
-  for (int x = foundQuery; x < foundQuery + SPLIT_SEQUENCE_LENGTH; x++)
-    cout << sequence[x];
-  cout << endl;
-
-   for (int x = foundSubject; x < foundSubject + SPLIT_SEQUENCE_LENGTH; x++)
-    cout << subjectSequence[x];
-  cout << endl;
-  */
-
-  int *leftRightPosition = (int *)malloc(sizeof(int) * 2);
-
-  leftRightPosition =
-      getExtendSequencePositions(sequence, foundQuery, foundSubject);
-
-  char *subjectSequenceFragment = (char *)malloc(
-      sizeof(char) * (leftRightPosition[1] - leftRightPosition[0]));
-
-  int fragmentPosition = 0;
-  for (int x = leftRightPosition[0]; x < leftRightPosition[1]; x++) {
-    subjectSequenceFragment[fragmentPosition++] = subjectSequence[x];
-  }
-
-  // cout << "Extended sequence" << endl;
-  // cout << subjectSequenceFragment << endl;
-
-  int bestAlignment =
-      smithWaterman(sequence, subjectSequenceFragment, -3, 2, -1, doPrint);
-
-  if (doPrint) cout << "Best alignment score: " << bestAlignment << endl;
-}
-
-int *BLAST::getExtendSequencePositions(char *querySequence, int queryPosition,
-                                       int sequencePosition) {
+int *BLAST::getExtendSubjectPositions(char *querySequence, int queryPosition,
+                                      int sequencePosition) {
   int sequenceleft = 0, sequenceRight = 0;
   int leftCounter = 1;
   int rightCounter = 1;
@@ -242,23 +176,6 @@ int *BLAST::getExtendSequencePositions(char *querySequence, int queryPosition,
       mismatch = true;
     }
   }
-
-  /*
-  cout << sequenceleft << " " << sequenceRight << endl;
-
-  for (int x = sequencePosition - sequenceleft;
-       x < sequencePosition + SPLIT_SEQUENCE_LENGTH + sequenceRight; x++) {
-    cout << subjectSequence[x];
-  }
-  cout << endl;
-
-  for (int x = queryPosition - sequenceleft;
-       x < queryPosition + SPLIT_SEQUENCE_LENGTH + sequenceRight; x++) {
-    cout << querySequence[x];
-  }
-  cout << endl;
-  */
-
   int *leftRightPosition = (int *)malloc(sizeof(int) * 2);
   leftRightPosition[0] = sequencePosition - sequenceleft;
   leftRightPosition[1] =
@@ -267,7 +184,60 @@ int *BLAST::getExtendSequencePositions(char *querySequence, int queryPosition,
   return leftRightPosition;
 }
 
-void BLAST::testWithRandomSequences(int sequencesLimit, bool doPrint) {
+int BLAST::startBlast(char *sequence, bool doPrint) {
+  char *tempRead;
+  tempRead = new char[SPLIT_SEQUENCE_LENGTH];
+  int characterCount = 0;
+  int nodesStored = 0;
+  int foundSubject = -1;
+  int foundQuery = -1;
+  for (int x = 0; x < SEQUENCE_LENGTH; x++) {
+    char c = sequence[x];
+    tempRead[characterCount] = c;
+    characterCount++;
+    if (characterCount == SPLIT_SEQUENCE_LENGTH) {
+      foundSubject = findMatch(tempRead);
+
+      if (foundSubject > -1) {
+        foundQuery = nodesStored;
+        break;
+      }
+
+      nodesStored++;
+      characterCount = SPLIT_SEQUENCE_LENGTH - 1;
+      for (int i = 1; i < SPLIT_SEQUENCE_LENGTH; i++) {
+        tempRead[i - 1] = tempRead[i];
+      }
+    }
+  }
+
+  if (foundQuery == -1) {
+    if (doPrint) cout << "No Match found" << endl;
+    return 0;
+  }
+
+  int *leftRightPosition = (int *)malloc(sizeof(int) * 2);
+
+  leftRightPosition =
+      getExtendSubjectPositions(sequence, foundQuery, foundSubject);
+
+  char *subjectSequenceFragment = (char *)malloc(
+      sizeof(char) * (leftRightPosition[1] - leftRightPosition[0]));
+
+  int fragmentPosition = 0;
+  for (int x = leftRightPosition[0]; x < leftRightPosition[1]; x++) {
+    subjectSequenceFragment[fragmentPosition++] = subjectSequence[x];
+  }
+
+  int bestAlignment =
+      smithWaterman(sequence, subjectSequenceFragment, -3, 2, -1, doPrint);
+
+  if (doPrint) cout << "Best alignment score: " << bestAlignment << endl;
+
+  return 1;
+}
+
+void BLAST::testSubjectWithRandomSequences(int sequencesLimit, bool doPrint) {
   char **sequences;
   sequences = (char **)malloc(sizeof(char *) * sequencesLimit);
   for (int x = 0; x < sequencesLimit; x++) {
@@ -275,10 +245,55 @@ void BLAST::testWithRandomSequences(int sequencesLimit, bool doPrint) {
   }
   sequences = generateRandomSequences(sequencesLimit);
   for (int x = 0; x < sequencesLimit; x++) {
-    searchSequence(sequences[x], doPrint);
+    startBlast(sequences[x], doPrint);
   }
   for (int x = 0; x < sequencesLimit; x++) free(sequences[x]);
   free(sequences);
+}
+
+char *BLAST::generateRandomSequenceFromSubject() {
+  char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
+
+  for (int x = 0; x < SEQUENCE_LENGTH; x++) {
+    int randomNumber = rand() % SARS_FULL_SEQUENCE_LENGTH;
+    sequence[x] = subjectSequence[randomNumber];
+  }
+
+  return sequence;
+}
+
+char *BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
+  int randomNumber;
+  char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
+
+  for (int x = 0; x < SEQUENCE_LENGTH; x++) {
+    randomNumber = rand() % SARS_FULL_SEQUENCE_LENGTH;
+    float percentage = (randomNumber / SARS_FULL_SEQUENCE_LENGTH) * 100;
+    if (percentage < errorRate) {
+      randomNumber = rand() % 4;
+      switch (randomNumber) {
+        case 0:
+          sequence[x] = 'A';
+          break;
+        case 1:
+          sequence[x] = 'C';
+          break;
+        case 2:
+          sequence[x] = 'G';
+          break;
+        case 3:
+          sequence[x] = 'T';
+          break;
+
+        default:
+          break;
+      }
+    } else {
+      sequence[x] = subjectSequence[randomNumber];
+    }
+  }
+
+  return sequence;
 }
 
 // Destroy function to deallocate all data structures
