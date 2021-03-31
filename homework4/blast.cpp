@@ -4,7 +4,6 @@
 #include "smithWaterman.h"
 
 BLAST::BLAST(int hashSize) {
-  srand(time(NULL));
   datasetCount = 0;
   hashTableSize = hashSize;
 
@@ -270,24 +269,40 @@ char *BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
     randomNumber = rand() % SARS_FULL_SEQUENCE_LENGTH;
     float percentage = (randomNumber / SARS_FULL_SEQUENCE_LENGTH) * 100;
     if (percentage < errorRate) {
-      randomNumber = rand() % 4;
-      switch (randomNumber) {
+      int randomCharacter = rand() % 4;
+      switch (randomCharacter) {
         case 0:
-          sequence[x] = 'A';
+          if (subjectSequence[randomNumber] == 'A') {
+            sequence[x] = 'C';
+          } else {
+            sequence[x] = 'A';
+          }
           break;
         case 1:
-          sequence[x] = 'C';
+          if (subjectSequence[randomNumber] == 'C') {
+            sequence[x] = 'G';
+          } else {
+            sequence[x] = 'C';
+          }
           break;
         case 2:
-          sequence[x] = 'G';
+          if (subjectSequence[randomNumber] == 'G') {
+            sequence[x] = 'T';
+          } else {
+            sequence[x] = 'G';
+          }
           break;
         case 3:
-          sequence[x] = 'T';
+          if (subjectSequence[randomNumber] == 'T') {
+            sequence[x] = 'A';
+          } else {
+            sequence[x] = 'T';
+          }
           break;
-
         default:
           break;
       }
+
     } else {
       sequence[x] = subjectSequence[randomNumber];
     }

@@ -30,6 +30,8 @@ int main(int argc, char **argv) {
     }
   }
 
+  srand(time(NULL));
+
   char *problem = new char[10];
   char *filePath = new char[100];
   char *filePath2 = new char[100];
