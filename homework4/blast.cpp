@@ -3,16 +3,11 @@
 #include "math.h"
 #include "smithWaterman.h"
 
-BLAST::BLAST(int hashSize) {
-  datasetCount = 0;
-  hashTableSize = hashSize;
-
-  hashTable = new HashNode *[hashTableSize];
-
-  for (int i = 0; i < hashTableSize; i++) {
+BLAST::BLAST() {
+  hashTable = new HashNode *[HASH_TABLE_SIZE];
+  for (int i = 0; i < HASH_TABLE_SIZE; i++) {
     hashTable[i] = NULL;
   }
-
   subjectSequence = (char *)malloc(sizeof(char) * SARS_FULL_SEQUENCE_LENGTH);
 }
 
@@ -20,12 +15,11 @@ BLAST::BLAST(int hashSize) {
 void BLAST::insertData(char *sequence, int position) {
   unsigned int radixValue = calculateRadix(sequence);
   insertInHashTable(radixValue, position);
-  datasetCount++;
 }
 
 // Function to insert data in hash table
 void BLAST::insertInHashTable(long unsigned int key, int position) {
-  int index = key % hashTableSize;
+  int index = key % HASH_TABLE_SIZE;
   HashNode *temp = hashTable[index];
   HashNode *entry = new HashNode;
   entry->radix = key;
@@ -75,7 +69,7 @@ long unsigned int BLAST::calculateRadix(char *sequence) {
 // Function to search single genome sequence
 int BLAST::findMatch(char *sequence) {
   long unsigned int radixValue = calculateRadix(sequence);
-  int index = radixValue % hashTableSize;
+  int index = radixValue % HASH_TABLE_SIZE;
   HashNode *current = hashTable[index];
   if (current == NULL) {
     return -1;
@@ -131,7 +125,8 @@ void BLAST::readSubjectSequencesFromFile(char *filePath) {
     }
   }
   delete[] tempRead;
-  cout << "Initialized " << nodesStored << " 11-mers sequences." << endl;
+  cout << "Broken down into " << nodesStored << " 11-mers sequences." << endl;
+  cout << "===========================================================" << endl;
 }
 
 int *BLAST::getExtendSubjectPositions(char *querySequence, int queryPosition,
@@ -302,7 +297,6 @@ char *BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
         default:
           break;
       }
-
     } else {
       sequence[x] = subjectSequence[randomNumber];
     }
@@ -314,6 +308,23 @@ char *BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
 // Destroy function to deallocate all data structures
 BLAST::~BLAST() {
   /////////////////////////////////////////////////////////////////
+  for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+    HashNode *head = hashTable[i];
+    if (head != NULL) {
+      HashNode *current = head;
+      HashNode *next = NULL;
 
+      while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+      }
+      head = NULL;
+    }
+    delete head;
+  }
+
+  delete[] hashTable;
+  free(subjectSequence);
   //////////////////////////////////////////////////////////////////
 }

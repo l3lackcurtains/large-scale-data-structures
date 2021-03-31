@@ -30,6 +30,8 @@ int main(int argc, char **argv) {
     }
   }
 
+  cout << "===========================================================" << endl;
+
   srand(time(NULL));
 
   char *problem = new char[10];
@@ -98,7 +100,7 @@ int main(int argc, char **argv) {
       testSequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
     }
 
-    BLAST blast = BLAST(10000);
+    BLAST blast = BLAST();
     blast.readSubjectSequencesFromFile(filePath);
     testSequences = readTestSequencesFromFile(filePath2);
     cout << "################################################################"
@@ -112,7 +114,7 @@ int main(int argc, char **argv) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
   } else if (strcmp(problem, "problem2B") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    BLAST blast = BLAST(10000);
+    BLAST blast = BLAST();
     blast.readSubjectSequencesFromFile(filePath);
 
     // # 1k sequences
@@ -139,7 +141,7 @@ int main(int argc, char **argv) {
       testSequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
     }
 
-    BLAST blast = BLAST(10000);
+    BLAST blast = BLAST();
     blast.readSubjectSequencesFromFile(filePath);
 
     int totalFound = 0;

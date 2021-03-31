@@ -2,6 +2,7 @@
 #define BLAST_H
 
 #define SPLIT_SEQUENCE_LENGTH 11
+#define HASH_TABLE_SIZE 10000
 
 struct HashNode {
   long unsigned int radix;
@@ -11,8 +12,6 @@ struct HashNode {
 
 class BLAST {
  private:
-  int hashTableSize;
-  int datasetCount;
   HashNode** hashTable;
   char* subjectSequence;
   int subjectSequenceSize;
@@ -22,7 +21,7 @@ class BLAST {
                                  int sequencePosition);
 
  public:
-  BLAST(int hashSize);
+  BLAST();
   ~BLAST();
   void insertData(char* sequence, int position);
   int findMatch(char* sequence);
