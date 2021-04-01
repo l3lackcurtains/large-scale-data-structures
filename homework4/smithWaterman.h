@@ -18,7 +18,7 @@ enum direction { END, UP, LEFT, DIAG };
 
 int matchScore(char a, char b, int gapPenalty, int match, int mismatch);
 
-int getFinalScore(const char* alignA, const char* alignB, int alignLength, int gapPenalty,
+int getFinalScore(char* alignA, char* alignB, int alignLength, int gapPenalty,
                   int match, int mismatch, bool doPrint);
 
 int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty,

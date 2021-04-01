@@ -8,23 +8,20 @@ int matchScore(char a, char b, int gapPenalty, int match, int mismatch) {
   return mismatch;
 }
 
-int getFinalScore(const char *alignA, const char *alignB, int alignLength, int gapPenalty,
+int getFinalScore(char *alignA, char *alignB, int alignLength, int gapPenalty,
                   int match, int mismatch, bool doPrint) {
 
-  char *finalAlignA, *finalAlignB;
-  finalAlignA = (char *)malloc(sizeof(char) * alignLength);
-  finalAlignB = (char *)malloc(sizeof(char) * alignLength);
+  char *finalAlignA = (char *)malloc(sizeof(char) * alignLength);
+  char * finalAlignB = (char *)malloc(sizeof(char) * alignLength);
 
-  strncpy(finalAlignA, alignA, alignLength);
-  strncpy(finalAlignB, alignB, alignLength);
-
-  reverse(finalAlignA, finalAlignA + alignLength);
-  reverse(finalAlignB, finalAlignB + alignLength);
+  for(int x = 0; x < alignLength; x++) {
+    finalAlignA[x] = alignA[alignLength - x - 1];
+    finalAlignB[x] = alignB[alignLength - x - 1];
+  }
 
   int x = 0, y = 0;
 
-  char *symbol;
-  symbol = (char *)malloc(sizeof(char) * alignLength);
+  char *symbol = (char *)malloc(sizeof(char) * alignLength);
   int symbolCount = 0;
 
   int score = 0;
@@ -68,6 +65,7 @@ int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, i
   int **scoreMatrix, **traceMatrix;
   scoreMatrix = (int **)malloc(sizeof(int *) * sequenceALength);
   traceMatrix = (int **)malloc(sizeof(int *) * sequenceALength);
+
   for (int x = 0; x < sequenceALength; x++) {
     scoreMatrix[x] = (int *)malloc(sizeof(int) * sequenceBLength);
     traceMatrix[x] = (int *)malloc(sizeof(int) * sequenceBLength);
@@ -85,6 +83,7 @@ int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, i
 
   for (int x = 1; x < sequenceALength; x++) {
     for (int y = 1; y < sequenceBLength; y++) {
+      
       int diagonalScore = scoreMatrix[x - 1][y - 1] +
                           matchScore(sequenceA[x - 1], sequenceB[y - 1],
                                      gapPenalty, match, mismatch);
@@ -145,18 +144,9 @@ int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, i
     }
   }
 
-  char *finalAlignA, *finalAlignB;
-  finalAlignA = (char *)malloc(sizeof(char) * alignCount);
-  finalAlignB = (char *)malloc(sizeof(char) * alignCount);
-
-  strncpy(finalAlignA, alignA, alignCount);
-  strncpy(finalAlignB, alignB, alignCount);
-
-  int finalScore = getFinalScore(finalAlignA, finalAlignB, alignCount,
+  int finalScore = getFinalScore(alignA, alignB, alignCount,
                                  gapPenalty, match, mismatch, doPrint);
 
-  free(finalAlignA);
-  free(finalAlignB);
   free(alignA);
   free(alignB);
 
@@ -166,6 +156,7 @@ int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, i
   }
   free(scoreMatrix);
   free(traceMatrix);
+  
   return finalScore;
 }
 
