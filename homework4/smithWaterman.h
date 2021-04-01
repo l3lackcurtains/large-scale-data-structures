@@ -21,8 +21,8 @@ int matchScore(char a, char b, int gapPenalty, int match, int mismatch);
 int getFinalScore(char* alignA, char* alignB, int alignLength, int gapPenalty,
                   int match, int mismatch, bool doPrint);
 
-int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty,
-                  int match, int mismatch, bool doPrint);
+int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match,
+                  int mismatch, bool doPrint);
 
 char* readSequenceFromFile(char* filePath);
 
