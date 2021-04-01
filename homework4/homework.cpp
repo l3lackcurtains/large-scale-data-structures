@@ -45,9 +45,9 @@ int main(int argc, char **argv) {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   if (strcmp(problem, "problem1A") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     char *sequence = readSequenceFromFile(filePath);
-    
+
     char **testSequences = readTestSequencesFromFile(filePath2);
 
     for (int x = 0; x < TEST_LENGTH; x++) {
@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     }
 
     free(sequence);
-    for (int x = 0; x < TEST_LENGTH; x++) free(testSequences[x]);
+    for (int x = 0; x < TEST_LENGTH; x++) delete testSequences[x];
     free(testSequences);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
     BLAST blast = BLAST();
     blast.readSubjectSequencesFromFile(filePath);
     char **testSequences = readTestSequencesFromFile(filePath2);
-    
+
     cout << "################################################################"
          << endl;
     for (int x = 0; x < TEST_LENGTH; x++) {
