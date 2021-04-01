@@ -8,7 +8,6 @@
 #include <fstream>
 #include <iostream>
 
-#define SARS_FULL_SEQUENCE_LENGTH 29903
 #define TEST_LENGTH 15
 #define SEQUENCE_LENGTH 50
 
@@ -31,5 +30,7 @@ char** readTestSequencesFromFile(char* filePath);
 char* generateRandomSequence();
 
 void testSubjectWithRandomSequences(char* sequence, int sequencesCount);
+
+int getSubjectLength(char* filePath);
 
 #endif

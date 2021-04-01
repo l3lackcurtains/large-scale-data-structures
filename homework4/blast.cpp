@@ -8,7 +8,6 @@ BLAST::BLAST() {
   for (int i = 0; i < HASH_TABLE_SIZE; i++) {
     hashTable[i] = NULL;
   }
-  subjectSequence = (char *)malloc(sizeof(char) * SARS_FULL_SEQUENCE_LENGTH);
 }
 
 // Helper function to insert data in hash table
@@ -89,6 +88,10 @@ int BLAST::findMatch(char *sequence) {
 void BLAST::readSubjectSequencesFromFile(char *filePath) {
   ifstream input;
   input.open(filePath);
+
+  subjectSequenceSize = getSubjectLength(filePath);
+  subjectSequence = (char *)malloc(sizeof(char) * subjectSequenceSize);
+
   char c = '\0';
   int characterCount = 0;
 
@@ -111,7 +114,7 @@ void BLAST::readSubjectSequencesFromFile(char *filePath) {
   characterCount = 0;
   int nodesStored = 0;
 
-  for (int x = 0; x < SARS_FULL_SEQUENCE_LENGTH; x++) {
+  for (int x = 0; x < subjectSequenceSize; x++) {
     c = subjectSequence[x];
     tempRead[characterCount] = c;
     characterCount++;
@@ -157,7 +160,7 @@ int *BLAST::getExtendSubjectPositions(char *querySequence, int queryPosition,
         (queryPosition + SPLIT_SEQUENCE_LENGTH + rightCounter - 1) <
             SEQUENCE_LENGTH &&
         (sequencePosition + SPLIT_SEQUENCE_LENGTH + rightCounter - 1) <
-            SARS_FULL_SEQUENCE_LENGTH;
+            subjectSequenceSize;
 
     if (checkLimit &&
         querySequence[queryPosition + SPLIT_SEQUENCE_LENGTH + rightCounter -
@@ -253,7 +256,7 @@ char *BLAST::generateRandomSequenceFromSubject() {
   char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
 
   for (int x = 0; x < SEQUENCE_LENGTH; x++) {
-    int randomNumber = rand() % SARS_FULL_SEQUENCE_LENGTH;
+    int randomNumber = rand() % subjectSequenceSize;
     sequence[x] = subjectSequence[randomNumber];
   }
   sequence[SEQUENCE_LENGTH] = '\0';
@@ -266,8 +269,8 @@ char *BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
   char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
 
   for (int x = 0; x < SEQUENCE_LENGTH; x++) {
-    randomNumber = rand() % SARS_FULL_SEQUENCE_LENGTH;
-    float percentage = (randomNumber / SARS_FULL_SEQUENCE_LENGTH) * 100;
+    randomNumber = rand() % subjectSequenceSize;
+    float percentage = (randomNumber / subjectSequenceSize) * 100;
     if (percentage < errorRate) {
       int randomCharacter = rand() % 4;
       switch (randomCharacter) {

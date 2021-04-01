@@ -3,7 +3,7 @@
 #SBATCH --job-name=q1a_sw_mp2525
 #SBATCH --output=/scratch/mp2525/sw_q1a.txt	
 #SBATCH --error=/scratch/mp2525/sw_q1a.err
-#SBATCH --time=360:00
+#SBATCH --time=1200:00
 #SBATCH --mem=20000
 
 module load gcc/10.2

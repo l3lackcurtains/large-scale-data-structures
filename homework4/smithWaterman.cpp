@@ -154,10 +154,30 @@ int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, i
   return finalScore;
 }
 
+int getSubjectLength(char* filePath) {
+  ifstream input;
+  input.open(filePath);
+
+  char c = '\0';
+  int characterCount = 0;
+
+  while (c != '\n') {
+    input.get(c);
+  }
+
+  while (input.get(c)) {
+    if (c == 'A' || c == 'C' || c == 'G' || c == 'T') {
+      characterCount++;
+    }
+  }
+  return characterCount;
+}
+
 char *readSequenceFromFile(char *filePath) {
   ifstream input;
   input.open(filePath);
-  char *sequence = (char *)malloc(sizeof(char) * SARS_FULL_SEQUENCE_LENGTH);
+  int subjectLength = getSubjectLength(filePath);
+  char *sequence = (char *)malloc(sizeof(char) * subjectLength);
 
   char c = '\0';
   int characterCount = 0;
