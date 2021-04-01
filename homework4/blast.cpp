@@ -171,6 +171,7 @@ int *BLAST::getExtendSubjectPositions(char *querySequence, int queryPosition,
     }
   }
   int *leftRightPosition = (int *)malloc(sizeof(int) * 2);
+  
   leftRightPosition[0] = sequencePosition - sequenceleft;
   leftRightPosition[1] =
       sequencePosition + SPLIT_SEQUENCE_LENGTH + sequenceRight;
@@ -255,6 +256,7 @@ char *BLAST::generateRandomSequenceFromSubject() {
     int randomNumber = rand() % SARS_FULL_SEQUENCE_LENGTH;
     sequence[x] = subjectSequence[randomNumber];
   }
+  sequence[SEQUENCE_LENGTH] = '\0';
 
   return sequence;
 }
@@ -304,6 +306,7 @@ char *BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
       sequence[x] = subjectSequence[randomNumber];
     }
   }
+  sequence[SEQUENCE_LENGTH] = '\0';
 
   return sequence;
 }

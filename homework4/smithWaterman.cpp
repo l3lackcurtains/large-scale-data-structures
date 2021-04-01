@@ -11,13 +11,8 @@ int matchScore(char a, char b, int gapPenalty, int match, int mismatch) {
 int getFinalScore(char *alignA, char *alignB, int alignLength, int gapPenalty,
                   int match, int mismatch, bool doPrint) {
 
-  char *finalAlignA = (char *)malloc(sizeof(char) * alignLength);
-  char * finalAlignB = (char *)malloc(sizeof(char) * alignLength);
-
-  for(int x = 0; x < alignLength; x++) {
-    finalAlignA[x] = alignA[alignLength - x - 1];
-    finalAlignB[x] = alignB[alignLength - x - 1];
-  }
+  reverse(alignA, alignA + alignLength);
+  reverse(alignB, alignB + alignLength);
 
   int x = 0, y = 0;
 
@@ -27,32 +22,30 @@ int getFinalScore(char *alignA, char *alignB, int alignLength, int gapPenalty,
   int score = 0;
 
   for (int x = 0; x < alignLength; x++) {
-    if (finalAlignA[x] == finalAlignB[x]) {
+    if (alignA[x] == alignB[x]) {
       symbol[symbolCount++] = '|';
-      score += matchScore(finalAlignA[x], finalAlignB[x], gapPenalty, match, mismatch);
-    } else if (finalAlignA[x] != finalAlignB[x] && finalAlignA[x] != '_' && finalAlignB[x] != '_') {
+      score += matchScore(alignA[x], alignB[x], gapPenalty, match, mismatch);
+    } else if (alignA[x] != alignB[x] && alignA[x] != '_' && alignB[x] != '_') {
       symbol[symbolCount++] = 'x';
-      score += matchScore(finalAlignA[x], finalAlignB[x], gapPenalty, match, mismatch);
-    } else if (finalAlignA[x] == '_' || finalAlignB[x] == '_') {
+      score += matchScore(alignA[x], alignB[x], gapPenalty, match, mismatch);
+    } else if (alignA[x] == '_' || alignB[x] == '_') {
       symbol[symbolCount++] = ' ';
       score += gapPenalty;
     }
   }
 
   if (doPrint) {
-    for (int x = 0; x < alignLength; x++) cout << finalAlignA[x];
+    for (int x = 0; x < alignLength; x++) cout << alignA[x];
     cout << endl;
 
     for (int x = 0; x < alignLength; x++) cout << symbol[x];
     cout << endl;
 
-    for (int x = 0; x < alignLength; x++) cout << finalAlignB[x];
+    for (int x = 0; x < alignLength; x++) cout << alignB[x];
     cout << endl;
   }
 
   free(symbol);
-  free(finalAlignA);
-  free(finalAlignB);
 
   return score;
 }
@@ -116,8 +109,8 @@ int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, i
   }
 
   char *alignA, *alignB;
-  alignA = (char *)malloc(sizeof(char) * sequenceALength);
-  alignB = (char *)malloc(sizeof(char) * sequenceBLength);
+  alignA = (char *)malloc(sizeof(char) * sequenceALength * sequenceBLength);
+  alignB = (char *)malloc(sizeof(char) * sequenceALength * sequenceBLength);
 
   int alignCount = 0;
 
@@ -143,13 +136,14 @@ int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, i
       x--;
     }
   }
+  alignA[alignCount] = '\0';
+  alignB[alignCount] = '\0';
 
   int finalScore = getFinalScore(alignA, alignB, alignCount,
                                  gapPenalty, match, mismatch, doPrint);
 
   free(alignA);
   free(alignB);
-
   for (int x = 0; x < sequenceALength; x++) {
     free(scoreMatrix[x]);
     free(traceMatrix[x]);
@@ -178,6 +172,7 @@ char *readSequenceFromFile(char *filePath) {
       characterCount++;
     }
   }
+  sequence[characterCount] = '\0';
 
   cout << "Initialized " << characterCount << " character sequences." << endl;
 
@@ -201,6 +196,7 @@ char **readTestSequencesFromFile(char *filePath) {
   while (!input.eof()) {
     input >> tempHeader;
     input >> testSequences[readCount];
+    testSequences[readCount][SEQUENCE_LENGTH] = '\0';
     readCount++;
   }
 
@@ -232,6 +228,7 @@ char* generateRandomSequence() {
           break;
       }
     }
+  sequence[SEQUENCE_LENGTH] = '\0';
   return sequence;
 }
 
@@ -252,5 +249,4 @@ void testSubjectWithRandomSequences(char *sequence, int sequencesCount) {
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
   printf("Time to test Smith Waterman with %d sequence: %3.3f seconds. \n", sequencesCount, totalTime);
 
-  
 }
