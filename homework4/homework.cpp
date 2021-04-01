@@ -50,10 +50,15 @@ int main(int argc, char **argv) {
 
     char **testSequences = readTestSequencesFromFile(filePath2);
 
+    cout << "################################################################"
+         << endl;
     for (int x = 0; x < TEST_LENGTH; x++) {
+      cout << "TEST SEQUENCE " << x + 1<< endl;
       int bestAlignment =
           smithWaterman(sequence, testSequences[x], -3, 2, -1, true);
-      cout << x << ": Best alignment score: " << bestAlignment << endl;
+      cout <<"Best alignment score: " << bestAlignment << endl;
+      cout << "################################################################"
+         << endl;
     }
 
     free(sequence);
@@ -92,7 +97,7 @@ int main(int argc, char **argv) {
     cout << "################################################################"
          << endl;
     for (int x = 0; x < TEST_LENGTH; x++) {
-      cout << "TEST SEQUENCE " << x << endl;
+      cout << "TEST SEQUENCE " << x + 1<< endl;
       blast.startBlast(testSequences[x], true);
       cout << "################################################################"
            << endl;

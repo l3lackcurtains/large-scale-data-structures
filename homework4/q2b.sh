@@ -4,7 +4,7 @@
 #SBATCH --output=/scratch/mp2525/blast_q2b.txt	
 #SBATCH --error=/scratch/mp2525/blast_q2b.err
 #SBATCH --time=1200:00
-#SBATCH --mem=20000
+#SBATCH --mem=60000
 
 module load gcc/10.2
 
