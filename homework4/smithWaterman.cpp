@@ -8,10 +8,18 @@ int matchScore(char a, char b, int gapPenalty, int match, int mismatch) {
   return mismatch;
 }
 
-int getFinalScore(char *alignA, char *alignB, int alignLength, int gapPenalty,
+int getFinalScore(const char *alignA, const char *alignB, int alignLength, int gapPenalty,
                   int match, int mismatch, bool doPrint) {
-  reverse(alignA, alignA + alignLength);
-  reverse(alignB, alignB + alignLength);
+
+  char *finalAlignA, *finalAlignB;
+  finalAlignA = (char *)malloc(sizeof(char) * alignLength);
+  finalAlignB = (char *)malloc(sizeof(char) * alignLength);
+
+  strncpy(finalAlignA, alignA, alignLength);
+  strncpy(finalAlignB, alignB, alignLength);
+
+  reverse(finalAlignA, finalAlignA + alignLength);
+  reverse(finalAlignB, finalAlignB + alignLength);
 
   int x = 0, y = 0;
 
@@ -22,34 +30,38 @@ int getFinalScore(char *alignA, char *alignB, int alignLength, int gapPenalty,
   int score = 0;
 
   for (int x = 0; x < alignLength; x++) {
-    if (alignA[x] == alignB[x]) {
+    if (finalAlignA[x] == finalAlignB[x]) {
       symbol[symbolCount++] = '|';
-      score += matchScore(alignA[x], alignB[x], gapPenalty, match, mismatch);
-    } else if (alignA[x] != alignB[x] && alignA[x] != '_' && alignB[x] != '_') {
+      score += matchScore(finalAlignA[x], finalAlignB[x], gapPenalty, match, mismatch);
+    } else if (finalAlignA[x] != finalAlignB[x] && finalAlignA[x] != '_' && finalAlignB[x] != '_') {
       symbol[symbolCount++] = 'x';
-      score += matchScore(alignA[x], alignB[x], gapPenalty, match, mismatch);
-    } else if (alignA[x] == '_' || alignB[x] == '_') {
+      score += matchScore(finalAlignA[x], finalAlignB[x], gapPenalty, match, mismatch);
+    } else if (finalAlignA[x] == '_' || finalAlignB[x] == '_') {
       symbol[symbolCount++] = ' ';
       score += gapPenalty;
     }
   }
 
   if (doPrint) {
-    for (int x = 0; x < alignLength; x++) cout << alignA[x];
+    for (int x = 0; x < alignLength; x++) cout << finalAlignA[x];
     cout << endl;
 
     for (int x = 0; x < alignLength; x++) cout << symbol[x];
     cout << endl;
 
-    for (int x = 0; x < alignLength; x++) cout << alignB[x];
+    for (int x = 0; x < alignLength; x++) cout << finalAlignB[x];
     cout << endl;
   }
+
+  free(symbol);
+  free(finalAlignA);
+  free(finalAlignB);
 
   return score;
 }
 
-int smithWaterman(const char *sequenceA, const char *sequenceB, int gapPenalty,
-                  int match, int mismatch, bool doPrint) {
+int smithWaterman(char *sequenceA, char *sequenceB, int gapPenalty, int match, int mismatch, bool doPrint) {
+  
   int sequenceALength = strlen(sequenceA) + 1;
   int sequenceBLength = strlen(sequenceB) + 1;
 
@@ -143,14 +155,24 @@ int smithWaterman(const char *sequenceA, const char *sequenceB, int gapPenalty,
   int finalScore = getFinalScore(finalAlignA, finalAlignB, alignCount,
                                  gapPenalty, match, mismatch, doPrint);
 
+  free(finalAlignA);
+  free(finalAlignB);
+  free(alignA);
+  free(alignB);
+
+  for (int x = 0; x < sequenceALength; x++) {
+    free(scoreMatrix[x]);
+    free(traceMatrix[x]);
+  }
+  free(scoreMatrix);
+  free(traceMatrix);
   return finalScore;
 }
 
 char *readSequenceFromFile(char *filePath) {
   ifstream input;
   input.open(filePath);
-  char *tempRead;
-  tempRead = (char *)malloc(sizeof(char) * SARS_FULL_SEQUENCE_LENGTH);
+  char *sequence = (char *)malloc(sizeof(char) * SARS_FULL_SEQUENCE_LENGTH);
 
   char c = '\0';
   int characterCount = 0;
@@ -161,17 +183,16 @@ char *readSequenceFromFile(char *filePath) {
 
   while (input.get(c)) {
     if (c == 'A' || c == 'C' || c == 'G' || c == 'T') {
-      tempRead[characterCount] = c;
+      sequence[characterCount] = c;
       characterCount++;
     }
   }
-  tempRead[characterCount] = '\0';
 
   cout << "Initialized " << characterCount << " character sequences." << endl;
 
   input.close();
 
-  return tempRead;
+  return sequence;
 }
 
 char **readTestSequencesFromFile(char *filePath) {
@@ -198,49 +219,47 @@ char **readTestSequencesFromFile(char *filePath) {
   return testSequences;
 }
 
-char **generateRandomSequences(int sequencesCount) {
+char* generateRandomSequence() {
   int randomNumber;
-  char **sequences = (char **)malloc(sizeof(char *) * sequencesCount);
-  for (int x = 0; x < sequencesCount; x++) {
-    sequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
-  }
-
-  for (int x = 0; x < sequencesCount; x++) {
+  char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
     for (int y = 0; y < SEQUENCE_LENGTH; y++) {
       randomNumber = rand() % 4;
       switch (randomNumber) {
         case 0:
-          sequences[x][y] = 'A';
+          sequence[y] = 'A';
           break;
         case 1:
-          sequences[x][y] = 'C';
+          sequence[y] = 'C';
           break;
         case 2:
-          sequences[x][y] = 'G';
+          sequence[y] = 'G';
           break;
         case 3:
-          sequences[x][y] = 'T';
+          sequence[y] = 'T';
           break;
-
         default:
           break;
       }
     }
-  }
-
-  return sequences;
+  return sequence;
 }
 
 void testSubjectWithRandomSequences(char *sequence, int sequencesCount) {
-  char **sequences;
-  sequences = (char **)malloc(sizeof(char *) * sequencesCount);
+  clock_t startTime, endTime;
+  float totalTime = 0.0;
+  startTime = clock();
+  //////////////////////////////////////////////////////////////////////
   for (int x = 0; x < sequencesCount; x++) {
-    sequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
+    char* testSequence = generateRandomSequence();
+    smithWaterman(sequence, testSequence, -3, 2, -1, false);
+    free(testSequence);
   }
-  sequences = generateRandomSequences(sequencesCount);
-  for (int x = 0; x < sequencesCount; x++) {
-    smithWaterman(sequence, sequences[x], -3, 2, -1, false);
-  }
-  for (int x = 0; x < sequencesCount; x++) free(sequences[x]);
-  free(sequences);
+  
+
+  //////////////////////////////////////////////////////////////////////
+  endTime = clock();
+  totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+  printf("Time to test Smith Waterman with %d sequence: %3.3f seconds. \n", sequencesCount, totalTime);
+
+  
 }

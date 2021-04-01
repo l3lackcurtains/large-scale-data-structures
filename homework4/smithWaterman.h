@@ -18,17 +18,17 @@ enum direction { END, UP, LEFT, DIAG };
 
 int matchScore(char a, char b, int gapPenalty, int match, int mismatch);
 
-int getFinalScore(char* alignA, char* alignB, int alignLength, int gapPenalty,
+int getFinalScore(const char* alignA, const char* alignB, int alignLength, int gapPenalty,
                   int match, int mismatch, bool doPrint);
 
-int smithWaterman(const char* sequenceA, const char* sequenceB, int gapPenalty,
+int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty,
                   int match, int mismatch, bool doPrint);
 
 char* readSequenceFromFile(char* filePath);
 
 char** readTestSequencesFromFile(char* filePath);
 
-char** generateRandomSequences(int sequencesCount);
+char* generateRandomSequence();
 
 void testSubjectWithRandomSequences(char* sequence, int sequencesCount);
 

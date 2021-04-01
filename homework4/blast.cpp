@@ -174,7 +174,6 @@ int *BLAST::getExtendSubjectPositions(char *querySequence, int queryPosition,
   leftRightPosition[0] = sequencePosition - sequenceleft;
   leftRightPosition[1] =
       sequencePosition + SPLIT_SEQUENCE_LENGTH + sequenceRight;
-
   return leftRightPosition;
 }
 
@@ -210,10 +209,7 @@ int BLAST::startBlast(char *sequence, bool doPrint) {
     return 0;
   }
 
-  int *leftRightPosition = (int *)malloc(sizeof(int) * 2);
-
-  leftRightPosition =
-      getExtendSubjectPositions(sequence, foundQuery, foundSubject);
+  int *leftRightPosition = getExtendSubjectPositions(sequence, foundQuery, foundSubject);
 
   char *subjectSequenceFragment = (char *)malloc(
       sizeof(char) * (leftRightPosition[1] - leftRightPosition[0]));
@@ -228,21 +224,28 @@ int BLAST::startBlast(char *sequence, bool doPrint) {
 
   if (doPrint) cout << "Best alignment score: " << bestAlignment << endl;
 
+  free(leftRightPosition);
+  free(subjectSequenceFragment);
+
   return 1;
 }
 
 void BLAST::testSubjectWithRandomSequences(int sequencesLimit, bool doPrint) {
-  char **sequences;
-  sequences = (char **)malloc(sizeof(char *) * sequencesLimit);
+
+  clock_t startTime, endTime;
+  float totalTime = 0.0;
+  startTime = clock();
+  //////////////////////////////////////////////////////////////////////
   for (int x = 0; x < sequencesLimit; x++) {
-    sequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH);
+    char* sequence = generateRandomSequence();
+    startBlast(sequence, doPrint);
+    free(sequence);
   }
-  sequences = generateRandomSequences(sequencesLimit);
-  for (int x = 0; x < sequencesLimit; x++) {
-    startBlast(sequences[x], doPrint);
-  }
-  for (int x = 0; x < sequencesLimit; x++) free(sequences[x]);
-  free(sequences);
+
+  //////////////////////////////////////////////////////////////////////
+  endTime = clock();
+  totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
+  printf("Time to test BLAST with %d sequence: %3.3f seconds. \n", sequencesLimit, totalTime);
 }
 
 char *BLAST::generateRandomSequenceFromSubject() {
