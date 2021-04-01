@@ -7,5 +7,6 @@
         "iostream": "cpp",
         "ostream": "cpp",
         "iosfwd": "cpp"
-    }
+    },
+    "C_Cpp.formatting": "vcFormat"
 }

@@ -13,24 +13,21 @@
 
 using namespace std;
 
+/**
+ * * direction
+ * ENUM that reference the matrix movement direction
+ */
 enum direction { END, UP, LEFT, DIAG };
 
 int matchScore(char a, char b, int gapPenalty, int match, int mismatch);
-
 int getFinalScore(char* alignA, char* alignB, int alignLength, int gapPenalty,
-                  int match, int mismatch, bool doPrint);
-
+    int match, int mismatch, bool doPrint);
 int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match,
-                  int mismatch, bool doPrint);
-
+    int mismatch, bool doPrint);
 char* readSequenceFromFile(char* filePath);
-
 char** readTestSequencesFromFile(char* filePath);
-
 char* generateRandomSequence();
-
 void testSubjectWithRandomSequences(char* sequence, int sequencesCount);
-
 int getSubjectLength(char* filePath);
 
 #endif
