@@ -171,6 +171,7 @@ int *BLAST::getExtendSubjectPositions(char *querySequence, int queryPosition,
     }
   }
   int *leftRightPosition = (int *)malloc(sizeof(int) * 2);
+  
   leftRightPosition[0] = sequencePosition - sequenceleft;
   leftRightPosition[1] =
       sequencePosition + SPLIT_SEQUENCE_LENGTH + sequenceRight;
@@ -209,8 +210,7 @@ int BLAST::startBlast(char *sequence, bool doPrint) {
     return 0;
   }
 
-  int *leftRightPosition =
-      getExtendSubjectPositions(sequence, foundQuery, foundSubject);
+  int *leftRightPosition = getExtendSubjectPositions(sequence, foundQuery, foundSubject);
 
   char *subjectSequenceFragment = (char *)malloc(
       sizeof(char) * (leftRightPosition[1] - leftRightPosition[0]));
@@ -232,12 +232,13 @@ int BLAST::startBlast(char *sequence, bool doPrint) {
 }
 
 void BLAST::testSubjectWithRandomSequences(int sequencesLimit, bool doPrint) {
+
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
   //////////////////////////////////////////////////////////////////////
   for (int x = 0; x < sequencesLimit; x++) {
-    char *sequence = generateRandomSequence();
+    char* sequence = generateRandomSequence();
     startBlast(sequence, doPrint);
     free(sequence);
   }
@@ -245,8 +246,7 @@ void BLAST::testSubjectWithRandomSequences(int sequencesLimit, bool doPrint) {
   //////////////////////////////////////////////////////////////////////
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
-  printf("Time to test BLAST with %d sequence: %3.3f seconds. \n",
-         sequencesLimit, totalTime);
+  printf("Time to test BLAST with %d sequence: %3.3f seconds. \n", sequencesLimit, totalTime);
 }
 
 char *BLAST::generateRandomSequenceFromSubject() {
@@ -256,6 +256,7 @@ char *BLAST::generateRandomSequenceFromSubject() {
     int randomNumber = rand() % SARS_FULL_SEQUENCE_LENGTH;
     sequence[x] = subjectSequence[randomNumber];
   }
+  sequence[SEQUENCE_LENGTH] = '\0';
 
   return sequence;
 }
@@ -305,6 +306,7 @@ char *BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
       sequence[x] = subjectSequence[randomNumber];
     }
   }
+  sequence[SEQUENCE_LENGTH] = '\0';
 
   return sequence;
 }
