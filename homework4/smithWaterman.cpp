@@ -95,6 +95,7 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
   int sequenceALength = strlen(sequenceA) + 1;
   int sequenceBLength = strlen(sequenceB) + 1;
 
+  // Build the score and trace matrix
   int** scoreMatrix, ** traceMatrix;
   scoreMatrix = (int**)malloc(sizeof(int*) * sequenceALength);
   traceMatrix = (int**)malloc(sizeof(int*) * sequenceALength);
@@ -104,6 +105,7 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
     traceMatrix[x] = (int*)malloc(sizeof(int) * sequenceBLength);
   }
 
+  // Initialize the matices
   for (int x = 0; x < sequenceALength; x++)   {
     for (int y = 0; y < sequenceBLength; y++)     {
       scoreMatrix[x][y] = 0;
@@ -114,6 +116,7 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
   int maxScore = 0;
   int maxX, maxY;
 
+  // Scan through the sequence and fill the matrices
   for (int x = 1; x < sequenceALength; x++)   {
     for (int y = 1; y < sequenceBLength; y++)     {
 
@@ -148,6 +151,7 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
     }
   }
 
+  
   char* alignA, * alignB;
   alignA = (char*)malloc(sizeof(char) * sequenceALength * sequenceBLength);
   alignB = (char*)malloc(sizeof(char) * sequenceALength * sequenceBLength);
@@ -157,6 +161,7 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
   int x = maxX;
   int y = maxY;
 
+  // Get the aligned sequences
   while (traceMatrix[x][y] != END)   {
     if (traceMatrix[x][y] == DIAG)     {
       alignA[alignCount] = sequenceA[x - 1];
@@ -181,6 +186,7 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
   alignA[alignCount] = '\0';
   alignB[alignCount] = '\0';
 
+  // Get the alignment socre
   int finalScore = getFinalScore(alignA, alignB, alignCount,
     gapPenalty, match, mismatch, doPrint);
 
@@ -208,7 +214,7 @@ int getSubjectLength(char* filePath) {
   }
 
   while (input.get(c))   {
-    if (c == 'A' || c == 'C' || c == 'G' || c == 'T')     {
+    if (c == 'A' || c == 'C' || c == 'G' || c == 'T') {
       characterCount++;
     }
   }
