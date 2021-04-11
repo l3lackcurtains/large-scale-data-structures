@@ -13,18 +13,29 @@
 #define BASE 4
 
 using namespace std;
-
+/**
+ * * Node
+ * Prefix Trie Node
+ */
 struct Node {
   int index;
   struct Node *childrens[BASE];
   struct Node *parent;
 };
 
+/**
+ * * StackVal
+ * Stack Value that has Node and mismatch at that node
+ */
 struct StackVal {
   int mismatch = 0;
   Node *stackNode = NULL;
 };
 
+/**
+ * * Stack
+ * Custom stack data structure
+ */
 class Stack {
  public:
   Stack();
@@ -35,6 +46,10 @@ class Stack {
   StackVal stackValue[STACKSIZE];
 };
 
+/**
+ * * prefix_trie
+ * Prefix tree class
+ */
 class prefix_trie {
  private:
   char *subjectSequence;
@@ -42,7 +57,6 @@ class prefix_trie {
   struct Node *root;
   struct Node *createNewNode();
   int getSubjectLength(char *filePath);
-
   int charToIndex(char character);
 
  public:

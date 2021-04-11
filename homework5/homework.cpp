@@ -40,9 +40,11 @@ int main(int argc, char **argv) {
   if (strcmp(problem, "problem1A") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     int simulations[3] = {5000, 50000, 100000};
-    prefix_trie trie(filePath);
+
     for (int x = 0; x < 3; x++) {
-       cout << "===========================================================" << endl;
+      prefix_trie trie(filePath);
+      cout << "###########################################################"
+           << endl;
       cout << "Generating " << simulations[x]
            << " Random 36-Mers to the Prefix-Trie" << endl;
       trie.generateAndInsertRandomSequences(simulations[x], 0);
@@ -53,9 +55,11 @@ int main(int argc, char **argv) {
   } else if (strcmp(problem, "problem1B") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     int simulations[3] = {1000, 50000, 100000};
-    prefix_trie trie(filePath);
+
     for (int x = 0; x < 3; x++) {
-       cout << "===========================================================" << endl;
+      prefix_trie trie(filePath);
+      cout << "###########################################################"
+           << endl;
       cout << "Generating " << simulations[x]
            << " Random 36-Mers to the Prefix-Trie" << endl;
       trie.generateAndInsertRandomSequences(simulations[x], 0.05);
