@@ -3,18 +3,16 @@
 #include "math.h"
 #include "smithWaterman.h"
 
-
 /**
  * * BLAST::~BLAST
  * Blast constructor that initialize the hash table
  */
 BLAST::BLAST() {
-  hashTable = new HashNode * [HASH_TABLE_SIZE];
+  hashTable = new HashNode*[HASH_TABLE_SIZE];
   for (int i = 0; i < HASH_TABLE_SIZE; i++) {
     hashTable[i] = NULL;
   }
 }
-
 
 /**
  * * BLAST::insertData
@@ -42,8 +40,7 @@ void BLAST::insertInHashTable(long unsigned int key, int position) {
   entry->next = NULL;
   if (temp == NULL) {
     hashTable[index] = entry;
-  }
-  else {
+  } else {
     hashTable[index] = entry;
     entry->next = temp;
   }
@@ -66,18 +63,18 @@ long unsigned int BLAST::calculateRadix(char* sequence) {
     current = sequence[i];
 
     switch (current) {
-    case 'A':
-      posValue = 0;
-      break;
-    case 'C':
-      posValue = 1;
-      break;
-    case 'G':
-      posValue = 2;
-      break;
-    case 'T':
-      posValue = 3;
-      break;
+      case 'A':
+        posValue = 0;
+        break;
+      case 'C':
+        posValue = 1;
+        break;
+      case 'G':
+        posValue = 2;
+        break;
+      case 'T':
+        posValue = 3;
+        break;
     }
     radixVal += pow(4, pos) * posValue;
 
@@ -173,7 +170,7 @@ void BLAST::readSubjectSequencesFromFile(char* filePath) {
  * @return array of left and right extended position of the subject sequence
  */
 int* BLAST::getExtendSubjectPositions(char* querySequence, int queryPosition,
-  int subjectSequencePosition) {
+                                      int subjectSequencePosition) {
   int sequenceleft = 0, sequenceRight = 0;
   int leftCounter = 1;
   int rightCounter = 1;
@@ -181,15 +178,15 @@ int* BLAST::getExtendSubjectPositions(char* querySequence, int queryPosition,
   bool mismatch = false;
 
   while (!mismatch) {
-    bool checkLimit =
-      (queryPosition - leftCounter) >= 0 && (subjectSequencePosition - leftCounter);
+    bool checkLimit = (queryPosition - leftCounter) >= 0 &&
+                      (subjectSequencePosition - leftCounter);
 
-    if (checkLimit && querySequence[queryPosition - leftCounter] ==
-      subjectSequence[subjectSequencePosition - leftCounter]) {
+    if (checkLimit &&
+        querySequence[queryPosition - leftCounter] ==
+            subjectSequence[subjectSequencePosition - leftCounter]) {
       leftCounter++;
       sequenceleft++;
-    }
-    else {
+    } else {
       mismatch = true;
     }
   }
@@ -198,20 +195,19 @@ int* BLAST::getExtendSubjectPositions(char* querySequence, int queryPosition,
 
   while (!mismatch) {
     bool checkLimit =
-      (queryPosition + SPLIT_SEQUENCE_LENGTH + rightCounter - 1) <
-      SEQUENCE_LENGTH &&
-      (subjectSequencePosition + SPLIT_SEQUENCE_LENGTH + rightCounter - 1) <
-      subjectSequenceSize;
+        (queryPosition + SPLIT_SEQUENCE_LENGTH + rightCounter - 1) <
+            SEQUENCE_LENGTH &&
+        (subjectSequencePosition + SPLIT_SEQUENCE_LENGTH + rightCounter - 1) <
+            subjectSequenceSize;
 
     if (checkLimit &&
-      querySequence[queryPosition + SPLIT_SEQUENCE_LENGTH + rightCounter -
-      1] ==
-      subjectSequence[subjectSequencePosition + SPLIT_SEQUENCE_LENGTH +
-      rightCounter - 1]) {
+        querySequence[queryPosition + SPLIT_SEQUENCE_LENGTH + rightCounter -
+                      1] ==
+            subjectSequence[subjectSequencePosition + SPLIT_SEQUENCE_LENGTH +
+                            rightCounter - 1]) {
       rightCounter++;
       sequenceRight++;
-    }
-    else {
+    } else {
       mismatch = true;
     }
   }
@@ -219,7 +215,7 @@ int* BLAST::getExtendSubjectPositions(char* querySequence, int queryPosition,
 
   leftRightPosition[0] = subjectSequencePosition - sequenceleft;
   leftRightPosition[1] =
-    subjectSequencePosition + SPLIT_SEQUENCE_LENGTH + sequenceRight;
+      subjectSequencePosition + SPLIT_SEQUENCE_LENGTH + sequenceRight;
   return leftRightPosition;
 }
 
@@ -262,10 +258,11 @@ int BLAST::startBlast(char* sequence, bool doPrint) {
     return 0;
   }
 
-  int* leftRightPosition = getExtendSubjectPositions(sequence, foundQuery, foundSubject);
+  int* leftRightPosition =
+      getExtendSubjectPositions(sequence, foundQuery, foundSubject);
 
   char* subjectSequenceFragment = (char*)malloc(
-    sizeof(char) * (leftRightPosition[1] - leftRightPosition[0]));
+      sizeof(char) * (leftRightPosition[1] - leftRightPosition[0]));
 
   int fragmentPosition = 0;
   for (int x = leftRightPosition[0]; x < leftRightPosition[1]; x++) {
@@ -273,7 +270,7 @@ int BLAST::startBlast(char* sequence, bool doPrint) {
   }
 
   int bestAlignment =
-    smithWaterman(sequence, subjectSequenceFragment, -3, 2, -1, doPrint);
+      smithWaterman(sequence, subjectSequenceFragment, -3, 2, -1, doPrint);
 
   if (doPrint) cout << "Best alignment score: " << bestAlignment << endl;
 
@@ -290,7 +287,6 @@ int BLAST::startBlast(char* sequence, bool doPrint) {
  * @param doPrint When true prints the genome sequences alignment
  */
 void BLAST::testSubjectWithRandomSequences(int sequencesLimit, bool doPrint) {
-
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
@@ -304,7 +300,8 @@ void BLAST::testSubjectWithRandomSequences(int sequencesLimit, bool doPrint) {
   //////////////////////////////////////////////////////////////////////
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
-  printf("Time to test BLAST with %d sequence: %3.3f seconds. \n", sequencesLimit, totalTime);
+  printf("Time to test BLAST with %d sequence: %3.3f seconds. \n",
+         sequencesLimit, totalTime);
 }
 
 /**
@@ -314,10 +311,9 @@ void BLAST::testSubjectWithRandomSequences(int sequencesLimit, bool doPrint) {
  */
 char* BLAST::generateRandomSequenceFromSubject() {
   char* sequence = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
-
+  int randomNumber = rand() % (subjectSequenceSize - SEQUENCE_LENGTH);
   for (int x = 0; x < SEQUENCE_LENGTH; x++) {
-    int randomNumber = rand() % subjectSequenceSize;
-    sequence[x] = subjectSequence[randomNumber];
+    sequence[x] = subjectSequence[randomNumber + x];
   }
   sequence[SEQUENCE_LENGTH] = '\0';
 
@@ -331,53 +327,41 @@ char* BLAST::generateRandomSequenceFromSubject() {
  * @return generated sequence
  */
 char* BLAST::generateRandomSequenceFromSubjectWithError(float errorRate) {
-  int randomNumber;
+  char randomBaseA[3] = {'C', 'G', 'T'};
+  char randomBaseC[3] = {'A', 'G', 'T'};
+  char randomBaseG[3] = {'A', 'C', 'T'};
+  char randomBaseT[3] = {'A', 'C', 'G'};
+
   char* sequence = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
 
-  for (int x = 0; x < SEQUENCE_LENGTH; x++) {
-    randomNumber = rand() % subjectSequenceSize;
-    float percentage = (randomNumber / subjectSequenceSize) * 100;
-    if (percentage < errorRate) {
-      int randomCharacter = rand() % 4;
-      switch (randomCharacter) {
-      case 0:
-        if (subjectSequence[randomNumber] == 'A') {
-          sequence[x] = 'C';
-        }
-        else {
-          sequence[x] = 'A';
-        }
-        break;
-      case 1:
-        if (subjectSequence[randomNumber] == 'C') {
-          sequence[x] = 'G';
-        }
-        else {
-          sequence[x] = 'C';
-        }
-        break;
-      case 2:
-        if (subjectSequence[randomNumber] == 'G') {
-          sequence[x] = 'T';
-        }
-        else {
-          sequence[x] = 'G';
-        }
-        break;
-      case 3:
-        if (subjectSequence[randomNumber] == 'T') {
-          sequence[x] = 'A';
-        }
-        else {
-          sequence[x] = 'T';
-        }
-        break;
-      default:
-        break;
+  int randomNumber = rand() % (subjectSequenceSize - SEQUENCE_LENGTH);
+
+  for (int j = 0; j < SEQUENCE_LENGTH; j++) {
+    sequence[j] = subjectSequence[j + randomNumber];
+    float percentage = ((float)rand() / (RAND_MAX));
+
+    if (errorRate > 0 && percentage < errorRate) {
+      int randChar;
+      switch (sequence[j]) {
+        case 'A':
+          randChar = rand() % (3);
+          sequence[j] = randomBaseA[randChar];
+          break;
+        case 'C':
+          randChar = rand() % (3);
+          sequence[j] = randomBaseC[randChar];
+          break;
+        case 'G':
+          randChar = rand() % (3);
+          sequence[j] = randomBaseG[randChar];
+          break;
+        case 'T':
+          randChar = rand() % (3);
+          sequence[j] = randomBaseT[randChar];
+          break;
+        default:
+          break;
       }
-    }
-    else {
-      sequence[x] = subjectSequence[randomNumber];
     }
   }
   sequence[SEQUENCE_LENGTH] = '\0';

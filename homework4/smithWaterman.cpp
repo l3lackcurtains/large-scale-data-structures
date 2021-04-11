@@ -13,10 +13,8 @@ using namespace std;
  * @return match score
  */
 int matchScore(char a, char b, int gapPenalty, int match, int mismatch) {
-  if (a == b)
-    return match;
-  if (a == '_' || b == '_')
-    return gapPenalty;
+  if (a == b) return match;
+  if (a == '_' || b == '_') return gapPenalty;
   return mismatch;
 }
 
@@ -33,8 +31,7 @@ int matchScore(char a, char b, int gapPenalty, int match, int mismatch) {
  * @return final score of the sequences alignment
  */
 int getFinalScore(char* alignA, char* alignB, int alignLength, int gapPenalty,
-  int match, int mismatch, bool doPrint) {
-
+                  int match, int mismatch, bool doPrint) {
   reverse(alignA, alignA + alignLength);
   reverse(alignB, alignB + alignLength);
 
@@ -45,32 +42,27 @@ int getFinalScore(char* alignA, char* alignB, int alignLength, int gapPenalty,
 
   int score = 0;
 
-  for (int x = 0; x < alignLength; x++)   {
-    if (alignA[x] == alignB[x])     {
+  for (int x = 0; x < alignLength; x++) {
+    if (alignA[x] == alignB[x]) {
       symbol[symbolCount++] = '|';
       score += matchScore(alignA[x], alignB[x], gapPenalty, match, mismatch);
-    }
-    else if (alignA[x] != alignB[x] && alignA[x] != '_' && alignB[x] != '_')     {
+    } else if (alignA[x] != alignB[x] && alignA[x] != '_' && alignB[x] != '_') {
       symbol[symbolCount++] = 'x';
       score += matchScore(alignA[x], alignB[x], gapPenalty, match, mismatch);
-    }
-    else if (alignA[x] == '_' || alignB[x] == '_')     {
+    } else if (alignA[x] == '_' || alignB[x] == '_') {
       symbol[symbolCount++] = ' ';
       score += gapPenalty;
     }
   }
 
-  if (doPrint)   {
-    for (int x = 0; x < alignLength; x++)
-      cout << alignA[x];
+  if (doPrint) {
+    for (int x = 0; x < alignLength; x++) cout << alignA[x];
     cout << endl;
 
-    for (int x = 0; x < alignLength; x++)
-      cout << symbol[x];
+    for (int x = 0; x < alignLength; x++) cout << symbol[x];
     cout << endl;
 
-    for (int x = 0; x < alignLength; x++)
-      cout << alignB[x];
+    for (int x = 0; x < alignLength; x++) cout << alignB[x];
     cout << endl;
   }
 
@@ -90,24 +82,24 @@ int getFinalScore(char* alignA, char* alignB, int alignLength, int gapPenalty,
  * @param doPrint if true prints the alignment of sequences
  * @return the best alignment score
  */
-int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, int mismatch, bool doPrint) {
-
+int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match,
+                  int mismatch, bool doPrint) {
   int sequenceALength = strlen(sequenceA) + 1;
   int sequenceBLength = strlen(sequenceB) + 1;
 
   // Build the score and trace matrix
-  int** scoreMatrix, ** traceMatrix;
+  int **scoreMatrix, **traceMatrix;
   scoreMatrix = (int**)malloc(sizeof(int*) * sequenceALength);
   traceMatrix = (int**)malloc(sizeof(int*) * sequenceALength);
 
-  for (int x = 0; x < sequenceALength; x++)   {
+  for (int x = 0; x < sequenceALength; x++) {
     scoreMatrix[x] = (int*)malloc(sizeof(int) * sequenceBLength);
     traceMatrix[x] = (int*)malloc(sizeof(int) * sequenceBLength);
   }
 
   // Initialize the matices
-  for (int x = 0; x < sequenceALength; x++)   {
-    for (int y = 0; y < sequenceBLength; y++)     {
+  for (int x = 0; x < sequenceALength; x++) {
+    for (int y = 0; y < sequenceBLength; y++) {
       scoreMatrix[x][y] = 0;
       traceMatrix[x][y] = 0;
     }
@@ -117,33 +109,32 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
   int maxX, maxY;
 
   // Scan through the sequence and fill the matrices
-  for (int x = 1; x < sequenceALength; x++)   {
-    for (int y = 1; y < sequenceBLength; y++)     {
-
+  for (int x = 1; x < sequenceALength; x++) {
+    for (int y = 1; y < sequenceBLength; y++) {
       int diagonalScore = scoreMatrix[x - 1][y - 1] +
-        matchScore(sequenceA[x - 1], sequenceB[y - 1],
-          gapPenalty, match, mismatch);
+                          matchScore(sequenceA[x - 1], sequenceB[y - 1],
+                                     gapPenalty, match, mismatch);
       int upScore = scoreMatrix[x][y - 1] + gapPenalty;
       int leftScore = scoreMatrix[x - 1][y] + gapPenalty;
-      scoreMatrix[x][y] = max({ 0, diagonalScore, leftScore, upScore });
+      scoreMatrix[x][y] = max({0, diagonalScore, leftScore, upScore});
 
-      if (scoreMatrix[x][y] == 0)       {
+      if (scoreMatrix[x][y] == 0) {
         traceMatrix[x][y] = END;
       }
 
-      if (scoreMatrix[x][y] == leftScore)       {
+      if (scoreMatrix[x][y] == leftScore) {
         traceMatrix[x][y] = UP;
       }
 
-      if (scoreMatrix[x][y] == upScore)       {
+      if (scoreMatrix[x][y] == upScore) {
         traceMatrix[x][y] = LEFT;
       }
 
-      if (scoreMatrix[x][y] == diagonalScore)       {
+      if (scoreMatrix[x][y] == diagonalScore) {
         traceMatrix[x][y] = DIAG;
       }
 
-      if (scoreMatrix[x][y] >= maxScore)       {
+      if (scoreMatrix[x][y] >= maxScore) {
         maxX = x;
         maxY = y;
         maxScore = scoreMatrix[x][y];
@@ -151,8 +142,7 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
     }
   }
 
-  
-  char* alignA, * alignB;
+  char *alignA, *alignB;
   alignA = (char*)malloc(sizeof(char) * sequenceALength * sequenceBLength);
   alignB = (char*)malloc(sizeof(char) * sequenceALength * sequenceBLength);
 
@@ -162,21 +152,19 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
   int y = maxY;
 
   // Get the aligned sequences
-  while (traceMatrix[x][y] != END)   {
-    if (traceMatrix[x][y] == DIAG)     {
+  while (traceMatrix[x][y] != END) {
+    if (traceMatrix[x][y] == DIAG) {
       alignA[alignCount] = sequenceA[x - 1];
       alignB[alignCount] = sequenceB[y - 1];
       alignCount++;
       x--;
       y--;
-    }
-    else if (traceMatrix[x][y] == LEFT)     {
+    } else if (traceMatrix[x][y] == LEFT) {
       alignA[alignCount] = '_';
       alignB[alignCount] = sequenceB[y - 1];
       alignCount++;
       y--;
-    }
-    else if (traceMatrix[x][y] == UP)     {
+    } else if (traceMatrix[x][y] == UP) {
       alignA[alignCount] = sequenceA[x - 1];
       alignB[alignCount] = '_';
       alignCount++;
@@ -187,12 +175,12 @@ int smithWaterman(char* sequenceA, char* sequenceB, int gapPenalty, int match, i
   alignB[alignCount] = '\0';
 
   // Get the alignment socre
-  int finalScore = getFinalScore(alignA, alignB, alignCount,
-    gapPenalty, match, mismatch, doPrint);
+  int finalScore = getFinalScore(alignA, alignB, alignCount, gapPenalty, match,
+                                 mismatch, doPrint);
 
   free(alignA);
   free(alignB);
-  for (int x = 0; x < sequenceALength; x++)   {
+  for (int x = 0; x < sequenceALength; x++) {
     free(scoreMatrix[x]);
     free(traceMatrix[x]);
   }
@@ -209,11 +197,11 @@ int getSubjectLength(char* filePath) {
   char c = '\0';
   int characterCount = 0;
 
-  while (c != '\n')   {
+  while (c != '\n') {
     input.get(c);
   }
 
-  while (input.get(c))   {
+  while (input.get(c)) {
     if (c == 'A' || c == 'C' || c == 'G' || c == 'T') {
       characterCount++;
     }
@@ -236,12 +224,12 @@ char* readSequenceFromFile(char* filePath) {
   char c = '\0';
   int characterCount = 0;
 
-  while (c != '\n')   {
+  while (c != '\n') {
     input.get(c);
   }
 
-  while (input.get(c))   {
-    if (c == 'A' || c == 'C' || c == 'G' || c == 'T')     {
+  while (input.get(c)) {
+    if (c == 'A' || c == 'C' || c == 'G' || c == 'T') {
       sequence[characterCount] = c;
       characterCount++;
     }
@@ -260,7 +248,7 @@ char* readSequenceFromFile(char* filePath) {
  */
 char** readTestSequencesFromFile(char* filePath) {
   char** testSequences = (char**)malloc(sizeof(char*) * TEST_LENGTH);
-  for (int x = 0; x < TEST_LENGTH; x++)   {
+  for (int x = 0; x < TEST_LENGTH; x++) {
     testSequences[x] = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
   }
 
@@ -270,7 +258,7 @@ char** readTestSequencesFromFile(char* filePath) {
   char* tempHeader = new char[100];
   int readCount = 0;
 
-  while (!input.eof())   {
+  while (!input.eof()) {
     input >> tempHeader;
     input >> testSequences[readCount];
     testSequences[readCount][SEQUENCE_LENGTH] = '\0';
@@ -291,23 +279,23 @@ char** readTestSequencesFromFile(char* filePath) {
 char* generateRandomSequence() {
   int randomNumber;
   char* sequence = (char*)malloc(sizeof(char) * SEQUENCE_LENGTH);
-  for (int y = 0; y < SEQUENCE_LENGTH; y++)   {
+  for (int y = 0; y < SEQUENCE_LENGTH; y++) {
     randomNumber = rand() % 4;
-    switch (randomNumber)     {
-    case 0:
-      sequence[y] = 'A';
-      break;
-    case 1:
-      sequence[y] = 'C';
-      break;
-    case 2:
-      sequence[y] = 'G';
-      break;
-    case 3:
-      sequence[y] = 'T';
-      break;
-    default:
-      break;
+    switch (randomNumber) {
+      case 0:
+        sequence[y] = 'A';
+        break;
+      case 1:
+        sequence[y] = 'C';
+        break;
+      case 2:
+        sequence[y] = 'G';
+        break;
+      case 3:
+        sequence[y] = 'T';
+        break;
+      default:
+        break;
     }
   }
   sequence[SEQUENCE_LENGTH] = '\0';
@@ -316,7 +304,8 @@ char* generateRandomSequence() {
 
 /**
  * * testSubjectWithRandomSequences
- * Function that read the subject sequence and test on random sequences of length sequencesLimit
+ * Function that read the subject sequence and test on random sequences of
+ * length sequencesLimit
  * @param sequence subject sequence
  * @param sequencesLimit random sequences limit
  */
@@ -325,7 +314,7 @@ void testSubjectWithRandomSequences(char* sequence, int sequencesLimit) {
   float totalTime = 0.0;
   startTime = clock();
   //////////////////////////////////////////////////////////////////////
-  for (int x = 0; x < sequencesLimit; x++)   {
+  for (int x = 0; x < sequencesLimit; x++) {
     char* testSequence = generateRandomSequence();
     smithWaterman(sequence, testSequence, -3, 2, -1, false);
     free(testSequence);
@@ -333,5 +322,6 @@ void testSubjectWithRandomSequences(char* sequence, int sequencesLimit) {
   //////////////////////////////////////////////////////////////////////
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
-  printf("Time to test Smith Waterman with %d sequence: %3.3f seconds. \n", sequencesLimit, totalTime);
+  printf("Time to test Smith Waterman with %d sequence: %3.3f seconds. \n",
+         sequencesLimit, totalTime);
 }

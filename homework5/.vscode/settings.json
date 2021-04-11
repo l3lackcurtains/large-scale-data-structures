@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.cu": "cuda",
+        "*.cuh": "cuda",
+        "fstream": "cpp",
+        "new": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp"
+    }
+}
