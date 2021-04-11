@@ -1,16 +1,13 @@
 ################################################################################
 # Main Modules
 ################################################################################
-1) smithWaterman.h: It is a header file for the smithWaterman.cpp file.
-2) smithWaterman.cpp: It includes the main smith waterman algorithm function and its helper functions.
-3) blast.h: It is a header file for the blast.cpp file.
-4) blast.cpp: It includes the methods "BLAST" class and the methods to implement blast according to assignment.
-5) homework.cpp: The main file that runs the solutions for problems 1 and 2.
+1) prefixTrie.h: It is a header file for the prefixTrie.cpp file.
+2) prefixTrie.cpp: It includes the main prefix trie methods and its helper functions.
+3) homework.cpp: The main file that runs the solutions for problems 1a and 1b.
 
 ################################################################################
 # Others modules used
 ################################################################################
-ctime: It is used for the calculation of CPU time.
 string.h: It is used to get string length and the string reversal to the array of characters data structure.
 
 ################################################################################
@@ -23,18 +20,17 @@ Run the command:
 # Execute homework subproblems
 ################################################################################
 Run the command:
-> ./homework {question_number} {sars_cov2} {test_dataset}
+> ./homework {question_number} {genome_dataset}
 
 where
 question_number: { problem1A, problem1B, problem2A, problem2B, problem2C }
-sars_cov2: "./sars_cov2.txt"
-test_dataset: "./test.txt" (used in question 1a and 2a)
+genome_dataset: "./genome.txt"
 
 Example:
 for question 1A
-> ./homework problem1A ./sars_cov2.txt ./test.txt
-for question 2B
-> ./homework problem2B ./sars_cov2.txt
+> ./homework problem1A ./genome.txt
+for question 1B
+> ./homework problem1B ./genome.txt
 
 ################################################################################
 # Clean the project
@@ -48,6 +44,6 @@ Run the command:
 Run the command:
 > sbatch q{question_number}.sh
 where
-question_number: { q1a, q1b, q2a, q2b, q2c }
+question_number: { q1a, q1b }
 Example: for question 1a
 > sbatch q1a.sh

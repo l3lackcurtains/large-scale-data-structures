@@ -193,8 +193,8 @@ void prefix_trie::generateAndInsertRandomSequences(int limit, float errorRate) {
   }
   int treeSize = prefixTrieSize(root);
 
-  cout << "Size of the Trie = " << treeSize << " (Including the root node)"
-       << " for " << limit << " Random 36-Mers" << endl;
+  cout << "PrefixTrie size"  << " (including root node)"
+       << " for " << limit << " random 36-mers: " << treeSize << endl;
 }
 
 void prefix_trie::fuzzySearch() {
@@ -217,10 +217,13 @@ void prefix_trie::fuzzySearch() {
       mismatchCheck[2]++;
   }
 
-  cout << "Number of 0 Mismatch = " << mismatchCheck[0] << endl
-       << "Number of 1 Mismatch = " << mismatchCheck[1] << endl
-       << "Number of 2 or more Mismatch = " << mismatchCheck[2] << endl
-       << "Total Matches = " << mismatchCheck[0] + mismatchCheck[1] << endl;
+  cout << "===========================================================" << endl;
+  cout << "0 Mismatch: " << mismatchCheck[0] << endl
+       << "1 Mismatch: " << mismatchCheck[1] << endl
+       << "1+ Mismatch: " << mismatchCheck[2] << endl;
+  cout << "*****************************" << endl;
+  cout << "Total Matches: " << mismatchCheck[0] + mismatchCheck[1] << endl;
+  cout << "===========================================================" << endl;
 }
 
 int prefix_trie::prefixTrieSize(Node *root) {
@@ -244,7 +247,10 @@ prefix_trie::prefix_trie(prefix_trie &copy) {
   subjectLength = copy.subjectLength;
 }
 
-prefix_trie::~prefix_trie() {}
+prefix_trie::~prefix_trie() {
+
+  
+}
 
 // Stack
 Stack::Stack() { top = -1; }
