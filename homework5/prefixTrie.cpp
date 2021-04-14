@@ -52,7 +52,6 @@ void prefix_trie::insert(char *sequence) {
     if (current->childrens[index] == NULL) {
       current->childrens[index] = createNewNode();
       current->childrens[index]->index = i;
-      current->childrens[index]->parent = current;
     }
     current = current->childrens[index];
   }
@@ -299,7 +298,7 @@ prefix_trie::prefix_trie(char *filepath) {
 
 /**
  * * prefix_trie::prefix_trie
- * Copy Constructor that copy another prefix trie
+ * Copy Constructor that copy another prefix trie (Not deep copy)
  */
 prefix_trie::prefix_trie(prefix_trie &copy) {
   root = copy.root;

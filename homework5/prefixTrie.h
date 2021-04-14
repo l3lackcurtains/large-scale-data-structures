@@ -20,7 +20,6 @@ using namespace std;
 struct Node {
   int index;
   struct Node *childrens[BASE];
-  struct Node *parent;
 };
 
 /**
