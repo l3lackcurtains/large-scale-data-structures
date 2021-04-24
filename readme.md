@@ -14,12 +14,12 @@ Implementing DAT (Direct Access Table) and Hash Table (Chaining) data structure 
 
 ### Module #4
 
-Implementing Smith-Waterman and BLAST (Smith-Waterman with seeds) algorithm in SARS-COV2 Genome sequences.
+Implementing Smith-Waterman and BLAST (Smith-Waterman with seeds) algorithms in SARS-COV2 Genome sequences.
 
 ### Module #5
 
-Implementing Prefix trie Data Structure in SARS-COV2 Genome sequences.
+Implementing Prefix Trie Data Structure in SARS-COV2 Genome sequences.
 
 ### Module #6
 
-Implementing Suffix trie and Suffix Tree Data Structure in SARS-COV2 Genome sequences.
+Implementing Suffix Trie and Suffix Tree Data Structure in SARS-COV2 Genome sequences.
