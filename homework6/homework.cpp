@@ -8,32 +8,24 @@
 
 using namespace std;
 
-int main(int argc, char **argv)
-{
-  if (argc < 3)
-  {
-    cout << endl
-         << endl
-         << "==========================" << endl;
+int main(int argc, char **argv) {
+  if (argc < 3) {
+    cout << endl << endl << "==========================" << endl;
     cout << "Error: 2 input parameters expected" << endl;
     cout << "Proper usage is:" << endl;
     cout << "./homework <problem-flag> <filepath>" << endl;
     cout << "Example:" << endl;
     cout << "./homework problem1A /scratch/vyf2/HW1/sample_hw_dataset.fa"
          << endl;
-    cout << "==========================" << endl
-         << endl;
+    cout << "==========================" << endl << endl;
     cout << "exiting..." << endl;
     exit(-1);
-  }
-  else
-  {
+  } else {
     cout << "The number of arguments passed: " << argc << endl;
     cout << "The first argument is: " << argv[0] << endl;
     cout << "The second argument is: " << argv[1] << endl;
     cout << "The third argument is: " << argv[2] << endl;
-    if (argv[3])
-      cout << "The fourth argument is: " << argv[3] << endl;
+    if (argv[3]) cout << "The fourth argument is: " << argv[3] << endl;
   }
 
   cout << "===========================================================" << endl;
@@ -46,21 +38,17 @@ int main(int argc, char **argv)
 
   problem = argv[1];
   filePath = argv[2];
-  if (argv[3])
-    filePath2 = argv[3];
+  if (argv[3]) filePath2 = argv[3];
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
-  if (strcmp(problem, "problem1A") == 0)
-  {
+  if (strcmp(problem, "problem1A") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     suffix_trie trie(filePath);
     trie.searchSequencesFromFile(filePath2);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-  }
-  else if (strcmp(problem, "problem1B") == 0)
-  {
+  } else if (strcmp(problem, "problem1B") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     suffix_trie trie(filePath);
 
@@ -68,21 +56,16 @@ int main(int argc, char **argv)
     cout << "Suffix Trie Size: " << suffixTrieSize << endl;
 
     int simulations[3] = {5000, 50000, 100000};
-    for (int x = 0; x < 3; x++)
-    {
+    for (int x = 0; x < 3; x++) {
       trie.generateAndSearchRandomSequences(simulations[x]);
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////
-  }
-  else if (strcmp(problem, "problem2A") == 0)
-  {
+  } else if (strcmp(problem, "problem2A") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     suffix_tree trie(filePath);
     trie.searchSequencesFromFile(filePath2);
     /////////////////////////////////////////////////////////////////////////////////////////////////
-  }
-  else if (strcmp(problem, "problem2B") == 0)
-  {
+  } else if (strcmp(problem, "problem2B") == 0) {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     suffix_tree trie(filePath);
 
@@ -90,14 +73,11 @@ int main(int argc, char **argv)
     cout << "Suffix Tree Size: " << suffixTreeSize << endl;
 
     int simulations[3] = {5000, 50000, 100000};
-    for (int x = 0; x < 3; x++)
-    {
+    for (int x = 0; x < 3; x++) {
       trie.generateAndSearchRandomSequences(simulations[x]);
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////
-  }
-  else
-  {
+  } else {
     cout << "Invalid problem" << endl;
   }
 

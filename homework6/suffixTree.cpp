@@ -9,8 +9,7 @@
  * @return Returns a new SuffixTreeNode
  */
 struct SuffixTreeNode *suffix_tree::createNewNode(SuffixTreeNode *parent,
-                                                  int offset, int length)
-{
+                                                  int offset, int length) {
   struct SuffixTreeNode *newNode = NULL;
   newNode = (struct SuffixTreeNode *)malloc(sizeof(struct SuffixTreeNode));
   newNode->offset = offset;
@@ -22,28 +21,23 @@ struct SuffixTreeNode *suffix_tree::createNewNode(SuffixTreeNode *parent,
   newNode->T = NULL;
   newNode->DS = NULL;
 
-  if (parent && parent->A)
-  {
+  if (parent && parent->A) {
     newNode->A = parent->A;
   }
 
-  if (parent && parent->C)
-  {
+  if (parent && parent->C) {
     newNode->C = parent->C;
   }
 
-  if (parent && parent->G)
-  {
+  if (parent && parent->G) {
     newNode->G = parent->G;
   }
 
-  if (parent && parent->T)
-  {
+  if (parent && parent->T) {
     newNode->T = parent->T;
   }
 
-  if (parent && parent->DS)
-  {
+  if (parent && parent->DS) {
     newNode->DS = parent->DS;
   }
 
@@ -56,20 +50,16 @@ struct SuffixTreeNode *suffix_tree::createNewNode(SuffixTreeNode *parent,
  * @param filePath File path to read the length
  * @return length of subject
  */
-int suffix_tree::getSubjectLength(char *filePath)
-{
+int suffix_tree::getSubjectLength(char *filePath) {
   ifstream input;
   input.open(filePath);
   char c = '\0';
   int characterCount = 0;
-  while (c != '\n')
-  {
+  while (c != '\n') {
     input.get(c);
   }
-  while (input.get(c))
-  {
-    if (c == 'A' || c == 'C' || c == 'G' || c == 'T')
-    {
+  while (input.get(c)) {
+    if (c == 'A' || c == 'C' || c == 'G' || c == 'T') {
       characterCount++;
     }
   }
@@ -81,21 +71,16 @@ int suffix_tree::getSubjectLength(char *filePath)
  * Inserts the sequence in the suffix tree
  * @param start The starting point of the subject sequence for insertion
  */
-void suffix_tree::insert(int start)
-{
+void suffix_tree::insert(int start) {
   struct SuffixTreeNode *current = root;
   int tempStart = start;
   bool exit = false;
 
-  while (tempStart < subjectLength + 1)
-  {
-    if (exit)
-      break;
+  while (tempStart < subjectLength + 1) {
+    if (exit) break;
 
-    if (subjectSequence[tempStart] == 'A')
-    {
-      if (!current->A)
-      {
+    if (subjectSequence[tempStart] == 'A') {
+      if (!current->A) {
         current->A =
             createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
         break;
@@ -104,58 +89,38 @@ void suffix_tree::insert(int start)
       int offset = current->A->offset;
       int length = current->A->length;
 
-      for (int x = offset; x < offset + length; x++)
-      {
-        if (subjectSequence[x] != subjectSequence[tempStart])
-        {
+      for (int x = offset; x < offset + length; x++) {
+        if (subjectSequence[x] != subjectSequence[tempStart]) {
           // Change the old Node
           current->A->length = x - offset;
 
           // Split the existing node
-          if (subjectSequence[x] == 'A')
-          {
+          if (subjectSequence[x] == 'A') {
             current->A->A = createNewNode(current->A, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'C')
-          {
+          } else if (subjectSequence[x] == 'C') {
             current->A->C = createNewNode(current->A, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'G')
-          {
+          } else if (subjectSequence[x] == 'G') {
             current->A->G = createNewNode(current->A, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'T')
-          {
+          } else if (subjectSequence[x] == 'T') {
             current->A->T = createNewNode(current->A, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == '$')
-          {
+          } else if (subjectSequence[x] == '$') {
             current->A->DS = createNewNode(NULL, -1, -1);
           }
 
           // Create a new branch
-          if (subjectSequence[tempStart] == 'A')
-          {
+          if (subjectSequence[tempStart] == 'A') {
             current->A->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'C')
-          {
+          } else if (subjectSequence[tempStart] == 'C') {
             current->A->C =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'G')
-          {
+          } else if (subjectSequence[tempStart] == 'G') {
             current->A->G =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'T')
-          {
+          } else if (subjectSequence[tempStart] == 'T') {
             current->A->T =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == '$')
-          {
+          } else if (subjectSequence[tempStart] == '$') {
             current->A->DS = createNewNode(NULL, -1, -1);
           }
           exit = true;
@@ -164,11 +129,8 @@ void suffix_tree::insert(int start)
         tempStart++;
       }
       current = current->A;
-    }
-    else if (subjectSequence[tempStart] == 'C')
-    {
-      if (!current->C)
-      {
+    } else if (subjectSequence[tempStart] == 'C') {
+      if (!current->C) {
         current->C =
             createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
         break;
@@ -177,58 +139,38 @@ void suffix_tree::insert(int start)
       int offset = current->C->offset;
       int length = current->C->length;
 
-      for (int x = offset; x < offset + length; x++)
-      {
-        if (subjectSequence[x] != subjectSequence[tempStart])
-        {
+      for (int x = offset; x < offset + length; x++) {
+        if (subjectSequence[x] != subjectSequence[tempStart]) {
           // Change the old Node
           current->C->length = x - offset;
 
           // Split the existing node
-          if (subjectSequence[x] == 'A')
-          {
+          if (subjectSequence[x] == 'A') {
             current->C->A = createNewNode(current->C, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'C')
-          {
+          } else if (subjectSequence[x] == 'C') {
             current->C->C = createNewNode(current->C, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'G')
-          {
+          } else if (subjectSequence[x] == 'G') {
             current->C->G = createNewNode(current->C, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'T')
-          {
+          } else if (subjectSequence[x] == 'T') {
             current->C->T = createNewNode(current->C, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == '$')
-          {
+          } else if (subjectSequence[x] == '$') {
             current->C->DS = createNewNode(NULL, -1, -1);
           }
 
           // Create a new branch
-          if (subjectSequence[tempStart] == 'A')
-          {
+          if (subjectSequence[tempStart] == 'A') {
             current->C->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'C')
-          {
+          } else if (subjectSequence[tempStart] == 'C') {
             current->C->C =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'G')
-          {
+          } else if (subjectSequence[tempStart] == 'G') {
             current->C->G =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'T')
-          {
+          } else if (subjectSequence[tempStart] == 'T') {
             current->C->T =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == '$')
-          {
+          } else if (subjectSequence[tempStart] == '$') {
             current->C->DS = createNewNode(NULL, -1, -1);
           }
           exit = true;
@@ -237,11 +179,8 @@ void suffix_tree::insert(int start)
         tempStart++;
       }
       current = current->C;
-    }
-    else if (subjectSequence[tempStart] == 'G')
-    {
-      if (!current->G)
-      {
+    } else if (subjectSequence[tempStart] == 'G') {
+      if (!current->G) {
         current->G =
             createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
         break;
@@ -250,58 +189,38 @@ void suffix_tree::insert(int start)
       int offset = current->G->offset;
       int length = current->G->length;
 
-      for (int x = offset; x < offset + length; x++)
-      {
-        if (subjectSequence[x] != subjectSequence[tempStart])
-        {
+      for (int x = offset; x < offset + length; x++) {
+        if (subjectSequence[x] != subjectSequence[tempStart]) {
           // Change the old Node
           current->G->length = x - offset;
 
           // Split the existing node
-          if (subjectSequence[x] == 'A')
-          {
+          if (subjectSequence[x] == 'A') {
             current->G->A = createNewNode(current->G, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'C')
-          {
+          } else if (subjectSequence[x] == 'C') {
             current->G->C = createNewNode(current->G, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'G')
-          {
+          } else if (subjectSequence[x] == 'G') {
             current->G->G = createNewNode(current->G, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'T')
-          {
+          } else if (subjectSequence[x] == 'T') {
             current->G->T = createNewNode(current->G, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == '$')
-          {
+          } else if (subjectSequence[x] == '$') {
             current->G->DS = createNewNode(NULL, -1, -1);
           }
 
           // Create a new branch
-          if (subjectSequence[tempStart] == 'A')
-          {
+          if (subjectSequence[tempStart] == 'A') {
             current->G->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'C')
-          {
+          } else if (subjectSequence[tempStart] == 'C') {
             current->G->C =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'G')
-          {
+          } else if (subjectSequence[tempStart] == 'G') {
             current->G->G =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'T')
-          {
+          } else if (subjectSequence[tempStart] == 'T') {
             current->G->T =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == '$')
-          {
+          } else if (subjectSequence[tempStart] == '$') {
             current->G->DS = createNewNode(NULL, -1, -1);
           }
           exit = true;
@@ -310,11 +229,8 @@ void suffix_tree::insert(int start)
         tempStart++;
       }
       current = current->G;
-    }
-    else if (subjectSequence[tempStart] == 'T')
-    {
-      if (!current->T)
-      {
+    } else if (subjectSequence[tempStart] == 'T') {
+      if (!current->T) {
         current->T =
             createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
         break;
@@ -323,58 +239,38 @@ void suffix_tree::insert(int start)
       int offset = current->T->offset;
       int length = current->T->length;
 
-      for (int x = offset; x < offset + length; x++)
-      {
-        if (subjectSequence[x] != subjectSequence[tempStart])
-        {
+      for (int x = offset; x < offset + length; x++) {
+        if (subjectSequence[x] != subjectSequence[tempStart]) {
           // Change the old Node
           current->T->length = x - offset;
 
           // Split the existing node
-          if (subjectSequence[x] == 'A')
-          {
+          if (subjectSequence[x] == 'A') {
             current->T->A = createNewNode(current->T, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'C')
-          {
+          } else if (subjectSequence[x] == 'C') {
             current->T->C = createNewNode(current->T, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'G')
-          {
+          } else if (subjectSequence[x] == 'G') {
             current->T->G = createNewNode(current->T, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == 'T')
-          {
+          } else if (subjectSequence[x] == 'T') {
             current->T->T = createNewNode(current->T, x, length - x + offset);
-          }
-          else if (subjectSequence[x] == '$')
-          {
+          } else if (subjectSequence[x] == '$') {
             current->T->DS = createNewNode(NULL, -1, -1);
           }
 
           // Create a new branch
-          if (subjectSequence[tempStart] == 'A')
-          {
+          if (subjectSequence[tempStart] == 'A') {
             current->T->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'C')
-          {
+          } else if (subjectSequence[tempStart] == 'C') {
             current->T->C =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'G')
-          {
+          } else if (subjectSequence[tempStart] == 'G') {
             current->T->G =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == 'T')
-          {
+          } else if (subjectSequence[tempStart] == 'T') {
             current->T->T =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
-          }
-          else if (subjectSequence[tempStart] == '$')
-          {
+          } else if (subjectSequence[tempStart] == '$') {
             current->T->DS = createNewNode(NULL, -1, -1);
           }
           exit = true;
@@ -383,9 +279,7 @@ void suffix_tree::insert(int start)
         tempStart++;
       }
       current = current->T;
-    }
-    else if (subjectSequence[tempStart] == '$')
-    {
+    } else if (subjectSequence[tempStart] == '$') {
       current->DS = createNewNode(NULL, -1, -1);
       break;
     }
@@ -398,22 +292,18 @@ void suffix_tree::insert(int start)
  * @param filePath File path to read the sequence
  * @return sequence that is read
  */
-char *suffix_tree::readSequenceFromFile(char *filePath)
-{
+char *suffix_tree::readSequenceFromFile(char *filePath) {
   ifstream input;
   input.open(filePath);
   subjectLength = getSubjectLength(filePath);
   char *sequence = (char *)malloc(sizeof(char) * (subjectLength + 1));
   char c = '\0';
   int characterCount = 0;
-  while (c != '\n')
-  {
+  while (c != '\n') {
     input.get(c);
   }
-  while (input.get(c))
-  {
-    if (c == 'A' || c == 'C' || c == 'G' || c == 'T')
-    {
+  while (input.get(c)) {
+    if (c == 'A' || c == 'C' || c == 'G' || c == 'T') {
       sequence[characterCount] = c;
       characterCount++;
     }
@@ -432,108 +322,82 @@ char *suffix_tree::readSequenceFromFile(char *filePath)
  * suffix tree
  * @returns If true, match is found on the suffix tree
  */
-bool suffix_tree::searchSequence(char *sequence, int sequenceLength)
-{
+bool suffix_tree::searchSequence(char *sequence, int sequenceLength) {
   //
   struct SuffixTreeNode *current = root;
   bool found = false;
   bool exit = false;
   int x = 0;
 
-  while (x < sequenceLength + 1)
-  {
-    if (exit)
-      break;
+  while (x < sequenceLength + 1) {
+    if (exit) break;
 
-    if (sequence[x] == 'A' && current->A)
-    {
+    if (sequence[x] == 'A' && current->A) {
       int offset = current->A->offset;
       int length = current->A->length;
 
-      for (int i = offset; i < offset + length; i++)
-      {
-        if (sequence[x] != subjectSequence[i])
-        {
+      for (int i = offset; i < offset + length; i++) {
+        if (sequence[x] != subjectSequence[i]) {
           exit = true;
           break;
         }
         x++;
-        if (sequence[x] == '$')
-        {
+        if (sequence[x] == '$') {
           exit = true;
           found = true;
         }
       }
 
       current = current->A;
-    }
-    else if (sequence[x] == 'C' && current->C)
-    {
+    } else if (sequence[x] == 'C' && current->C) {
       int offset = current->C->offset;
       int length = current->C->length;
 
-      for (int i = offset; i < offset + length; i++)
-      {
-        if (sequence[x] != subjectSequence[i])
-        {
+      for (int i = offset; i < offset + length; i++) {
+        if (sequence[x] != subjectSequence[i]) {
           exit = true;
           break;
         }
         x++;
-        if (sequence[x] == '$')
-        {
+        if (sequence[x] == '$') {
           exit = true;
           found = true;
         }
       }
       current = current->C;
-    }
-    else if (sequence[x] == 'G' && current->G)
-    {
+    } else if (sequence[x] == 'G' && current->G) {
       int offset = current->G->offset;
       int length = current->G->length;
-      for (int i = offset; i < offset + length; i++)
-      {
-        if (sequence[x] != subjectSequence[i])
-        {
+      for (int i = offset; i < offset + length; i++) {
+        if (sequence[x] != subjectSequence[i]) {
           exit = true;
           break;
         }
         x++;
-        if (sequence[x] == '$')
-        {
+        if (sequence[x] == '$') {
           exit = true;
           found = true;
         }
       }
       current = current->G;
-    }
-    else if (sequence[x] == 'T' && current->T)
-    {
+    } else if (sequence[x] == 'T' && current->T) {
       int offset = current->T->offset;
       int length = current->T->length;
-      for (int i = offset; i < offset + length; i++)
-      {
-        if (sequence[x] != subjectSequence[i])
-        {
+      for (int i = offset; i < offset + length; i++) {
+        if (sequence[x] != subjectSequence[i]) {
           exit = true;
           break;
         }
         x++;
-        if (sequence[x] == '$')
-        {
+        if (sequence[x] == '$') {
           exit = true;
           found = true;
         }
       }
       current = current->T;
-    }
-    else if (sequence[x] == '$')
-    {
+    } else if (sequence[x] == '$') {
       found = true;
-    }
-    else
-    {
+    } else {
       break;
     }
   }
@@ -547,11 +411,9 @@ bool suffix_tree::searchSequence(char *sequence, int sequenceLength)
  * tree
  * @param filePath Takes the filepath that contains fragments to be searched
  */
-void suffix_tree::searchSequencesFromFile(char *filePath)
-{
+void suffix_tree::searchSequencesFromFile(char *filePath) {
   char **testSequences = (char **)malloc(sizeof(char *) * TEST_LENGTH);
-  for (int x = 0; x < TEST_LENGTH; x++)
-  {
+  for (int x = 0; x < TEST_LENGTH; x++) {
     testSequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH + 1);
   }
 
@@ -561,8 +423,7 @@ void suffix_tree::searchSequencesFromFile(char *filePath)
   char *tempHeader = new char[100];
   int readCount = 0;
 
-  while (!input.eof())
-  {
+  while (!input.eof()) {
     input >> tempHeader;
     input >> testSequences[readCount];
     testSequences[readCount][SEQUENCE_LENGTH] = '$';
@@ -573,16 +434,12 @@ void suffix_tree::searchSequencesFromFile(char *filePath)
   input.close();
 
   cout << "Searching from file." << endl;
-  for (int x = 0; x < TEST_LENGTH; x++)
-  {
+  for (int x = 0; x < TEST_LENGTH; x++) {
     bool found = searchSequence(testSequences[x], SEQUENCE_LENGTH);
     cout << testSequences[x];
-    if (found)
-    {
+    if (found) {
       cout << " : FOUND" << endl;
-    }
-    else
-    {
+    } else {
       cout << " : NOT FOUND" << endl;
     }
   }
@@ -593,12 +450,10 @@ void suffix_tree::searchSequencesFromFile(char *filePath)
  * Function that generates the random sequences from the subject
  * @return The random sequence
  */
-char *suffix_tree::generateRandomSequenceFromSubject()
-{
+char *suffix_tree::generateRandomSequenceFromSubject() {
   char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH + 1);
   int randomNumber = rand() % (subjectLength - SEQUENCE_LENGTH);
-  for (int x = 0; x < SEQUENCE_LENGTH; x++)
-  {
+  for (int x = 0; x < SEQUENCE_LENGTH; x++) {
     sequence[x] = subjectSequence[randomNumber + x];
   }
   sequence[SEQUENCE_LENGTH] = '$';
@@ -610,19 +465,16 @@ char *suffix_tree::generateRandomSequenceFromSubject()
  * Function that generates all the random sequences from the subject and search
  * these sequences in the suffix tree
  */
-void suffix_tree::generateAndSearchRandomSequences(int simNumber)
-{
+void suffix_tree::generateAndSearchRandomSequences(int simNumber) {
   clock_t startTime, endTime;
   float totalTime = 0.0;
   startTime = clock();
   /////////////////////////////////////////////////////
   int foundCount = 0;
-  for (int x = 0; x < simNumber; x++)
-  {
+  for (int x = 0; x < simNumber; x++) {
     char *sequence = generateRandomSequenceFromSubject();
     bool found = searchSequence(sequence, SEQUENCE_LENGTH);
-    if (found)
-      foundCount++;
+    if (found) foundCount++;
   }
   cout << simNumber << " random sequences: " << foundCount << " sequences found"
        << endl;
@@ -639,13 +491,13 @@ void suffix_tree::generateAndSearchRandomSequences(int simNumber)
  * @param root root node of the tree
  * @return total number of non empty nodes
  */
-int suffix_tree::suffixTreeSize(SuffixTreeNode *root)
-{
+int suffix_tree::suffixTreeSize(SuffixTreeNode *root) {
   if (root == NULL)
     return 0;
   else
     return suffixTreeSize(root->A) + suffixTreeSize(root->C) +
-           suffixTreeSize(root->G) + suffixTreeSize(root->T) + suffixTreeSize(root->DS) + 1;
+           suffixTreeSize(root->G) + suffixTreeSize(root->T) +
+           suffixTreeSize(root->DS) + 1;
 }
 
 /**
@@ -660,12 +512,10 @@ int suffix_tree::getSuffixTreeSize() { return suffixTreeSize(root); }
  * @param filepath the filepath that is to be read
  * Constructor that read the file containing subject sequence
  */
-suffix_tree::suffix_tree(char *filepath)
-{
+suffix_tree::suffix_tree(char *filepath) {
   root = createNewNode(NULL, -1, -1);
   subjectSequence = readSequenceFromFile(filepath);
-  for (int x = 0; x < subjectLength + 1; x++)
-  {
+  for (int x = 0; x < subjectLength + 1; x++) {
     insert(x);
   }
 }
@@ -677,13 +527,11 @@ suffix_tree::suffix_tree(char *filepath)
  * @param sequenceLength The length of the sequence
 
  */
-suffix_tree::suffix_tree(char *newSequence, int sequenceLength)
-{
+suffix_tree::suffix_tree(char *newSequence, int sequenceLength) {
   root = createNewNode(NULL, -1, -1);
   subjectSequence = newSequence;
   subjectLength = sequenceLength;
-  for (int x = 0; x < subjectLength + 1; x++)
-  {
+  for (int x = 0; x < subjectLength + 1; x++) {
     insert(x);
   }
 }
@@ -693,10 +541,8 @@ suffix_tree::suffix_tree(char *newSequence, int sequenceLength)
  * @param root the node that is to be deallocated
  * Helper function to deallocate the memory of the suffix tree
  */
-void suffix_tree::deallocateNode(SuffixTreeNode *root)
-{
-  if (root == NULL)
-    return;
+void suffix_tree::deallocateNode(SuffixTreeNode *root) {
+  if (root == NULL) return;
   deallocateNode(root->A);
   deallocateNode(root->C);
   deallocateNode(root->G);
@@ -711,8 +557,7 @@ void suffix_tree::deallocateNode(SuffixTreeNode *root)
  * Destructor function that cleans up tree data structure and subject
  * sequence
  */
-suffix_tree::~suffix_tree()
-{
+suffix_tree::~suffix_tree() {
   deallocateNode(root);
   free(subjectSequence);
 }
