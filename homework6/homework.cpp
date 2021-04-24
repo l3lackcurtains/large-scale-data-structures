@@ -65,6 +65,18 @@ int main(int argc, char **argv) {
     suffix_tree trie(filePath);
     trie.searchSequencesFromFile(filePath2);
     /////////////////////////////////////////////////////////////////////////////////////////////////
+  } else if (strcmp(problem, "problem2B") == 0) {
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    suffix_tree trie(filePath);
+
+    int suffixTreeSize = trie.getSuffixTreeSize();
+    cout << "Suffix Tree Size: " << suffixTreeSize << endl;
+
+    int simulations[3] = {20, 200, 2000};
+    for (int x = 0; x < 3; x++) {
+      trie.generateAndSearchRandomSequences(simulations[x]);
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
   } else {
     cout << "Invalid problem" << endl;
   }

@@ -321,33 +321,44 @@ bool suffix_tree::searchSequence(char *sequence) {
   bool found = false;
   bool exit = false;
   int x = 0;
+
   while (x < SEQUENCE_LENGTH + 1) {
     if (exit) break;
+
     if (sequence[x] == 'A' && current->A) {
       int offset = current->A->offset;
       int length = current->A->length;
+
       for (int i = offset; i < offset + length; i++) {
         if (sequence[x] != subjectSequence[i]) {
           exit = true;
           break;
         }
         x++;
+        if (sequence[x] == '$') {
+          exit = true;
+          found = true;
+        }
       }
+
       current = current->A;
-    }
-    if (sequence[x] == 'C' && current->C) {
+    } else if (sequence[x] == 'C' && current->C) {
       int offset = current->C->offset;
       int length = current->C->length;
+
       for (int i = offset; i < offset + length; i++) {
         if (sequence[x] != subjectSequence[i]) {
           exit = true;
           break;
         }
         x++;
+        if (sequence[x] == '$') {
+          exit = true;
+          found = true;
+        }
       }
       current = current->C;
-    }
-    if (sequence[x] == 'G' && current->G) {
+    } else if (sequence[x] == 'G' && current->G) {
       int offset = current->G->offset;
       int length = current->G->length;
       for (int i = offset; i < offset + length; i++) {
@@ -356,10 +367,13 @@ bool suffix_tree::searchSequence(char *sequence) {
           break;
         }
         x++;
+        if (sequence[x] == '$') {
+          exit = true;
+          found = true;
+        }
       }
       current = current->G;
-    }
-    if (sequence[x] == 'T' && current->T) {
+    } else if (sequence[x] == 'T' && current->T) {
       int offset = current->T->offset;
       int length = current->T->length;
       for (int i = offset; i < offset + length; i++) {
@@ -368,6 +382,10 @@ bool suffix_tree::searchSequence(char *sequence) {
           break;
         }
         x++;
+        if (sequence[x] == '$') {
+          exit = true;
+          found = true;
+        }
       }
       current = current->T;
 
