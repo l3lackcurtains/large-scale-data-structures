@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
     int suffixTrieSize = trie.getSuffixTrieSize();
     cout << "Suffix Trie Size: " << suffixTrieSize << endl;
 
-    int simulations[3] = {20, 200, 2000};
+    int simulations[3] = {5000, 50000, 100000};
     for (int x = 0; x < 3; x++) {
       trie.generateAndSearchRandomSequences(simulations[x]);
     }
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     int suffixTreeSize = trie.getSuffixTreeSize();
     cout << "Suffix Tree Size: " << suffixTreeSize << endl;
 
-    int simulations[3] = {20, 200, 2000};
+    int simulations[3] = {5000, 50000, 100000};
     for (int x = 0; x < 3; x++) {
       trie.generateAndSearchRandomSequences(simulations[x]);
     }

@@ -39,15 +39,16 @@ class suffix_tree {
                                        int length);
   int getSubjectLength(char *filePath);
   int suffixTreeSize(SuffixTreeNode *root);
+  void deallocateNode(SuffixTreeNode *root);
+  char *readSequenceFromFile(char *filePath);
+  char *generateRandomSequenceFromSubject();
 
  public:
   suffix_tree(char *filepath);
   ~suffix_tree();
-  char *readSequenceFromFile(char *filePath);
   void insert(int start);
-  bool searchSequence(char *sequence);
+  bool searchSequence(char *sequence, int sequenceLength);
   void searchSequencesFromFile(char *filePath);
-  char *generateRandomSequenceFromSubject();
   void generateAndSearchRandomSequences(int simNumber);
   int getSuffixTreeSize();
 };

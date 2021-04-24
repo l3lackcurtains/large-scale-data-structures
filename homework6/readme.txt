@@ -1,9 +1,11 @@
 ################################################################################
 # Main Modules
 ################################################################################
-1) prefixTrie.h: It is a header file for the prefixTrie.cpp file.
-2) prefixTrie.cpp: It includes the main prefix trie methods and its helper functions.
-3) homework.cpp: The main file that runs the solutions for problems 1a and 1b.
+1) suffixTrie.h: It is a header file for the suffixTrie.cpp file.
+2) suffixTrie.cpp: It includes the main suffix trie methods and its helper functions.
+3) suffixTree.h: It is a header file for the suffixTree.cpp file.
+4) suffixTree.cpp: It includes the main suffix trie methods and its helper functions.
+5) homework.cpp: The main file that runs the solutions for problems 1a, 1b, 2a and 2b.
 
 ################################################################################
 # Others modules used
@@ -20,16 +22,17 @@ Run the command:
 # Execute homework subproblems
 ################################################################################
 Run the command:
-> ./homework {question_number} {genome_dataset}
+> ./homework {question_number} {genome_dataset} {search_dataset}
 
 where
 question_number: { problem1A, problem1B, problem2A, problem2B, problem2C }
 genome_dataset: "./genome.txt"
+search_dataset: "./search.txt"
 
 Example:
 for question 1A
-> ./homework problem1A ./genome.txt
-for question 1B
+> ./homework problem1A ./genome.txt ./search.txt
+for question 2B
 > ./homework problem1B ./genome.txt
 
 ################################################################################
@@ -44,6 +47,6 @@ Run the command:
 Run the command:
 > sbatch q{question_number}.sh
 where
-question_number: { q1a, q1b }
+question_number: { q1a, q1b, q2a, q2b }
 Example: for question 1a
 > sbatch q1a.sh

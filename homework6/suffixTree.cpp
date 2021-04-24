@@ -11,34 +11,30 @@ struct SuffixTreeNode *suffix_tree::createNewNode(SuffixTreeNode *parent,
   newNode->offset = offset;
   newNode->length = length;
 
+  newNode->A = NULL;
+  newNode->C = NULL;
+  newNode->G = NULL;
+  newNode->T = NULL;
+  newNode->DS = NULL;
+
   if (parent && parent->A) {
     newNode->A = parent->A;
-  } else {
-    newNode->A = NULL;
   }
 
   if (parent && parent->C) {
     newNode->C = parent->C;
-  } else {
-    newNode->C = NULL;
   }
 
   if (parent && parent->G) {
     newNode->G = parent->G;
-  } else {
-    newNode->G = NULL;
   }
 
   if (parent && parent->T) {
     newNode->T = parent->T;
-  } else {
-    newNode->T = NULL;
   }
 
   if (parent && parent->DS) {
     newNode->DS = parent->DS;
-  } else {
-    newNode->DS = NULL;
   }
 
   return newNode;
@@ -315,14 +311,14 @@ char *suffix_tree::readSequenceFromFile(char *filePath) {
  * * suffix_tree::fuzzySearch
  * Function that does the fuzzt search on the subject query
  */
-bool suffix_tree::searchSequence(char *sequence) {
+bool suffix_tree::searchSequence(char *sequence, int sequenceLength) {
   //
   struct SuffixTreeNode *current = root;
   bool found = false;
   bool exit = false;
   int x = 0;
 
-  while (x < SEQUENCE_LENGTH + 1) {
+  while (x < sequenceLength + 1) {
     if (exit) break;
 
     if (sequence[x] == 'A' && current->A) {
@@ -424,7 +420,7 @@ void suffix_tree::searchSequencesFromFile(char *filePath) {
   input.close();
   cout << "Searching from file." << endl;
   for (int x = 0; x < TEST_LENGTH; x++) {
-    bool found = searchSequence(testSequences[x]);
+    bool found = searchSequence(testSequences[x], SEQUENCE_LENGTH);
     cout << testSequences[x];
     if (found) {
       cout << " : FOUND" << endl;
@@ -452,7 +448,7 @@ void suffix_tree::generateAndSearchRandomSequences(int simNumber) {
   int foundCount = 0;
   for (int x = 0; x < simNumber; x++) {
     char *sequence = generateRandomSequenceFromSubject();
-    bool found = searchSequence(sequence);
+    bool found = searchSequence(sequence, SEQUENCE_LENGTH);
     if (found) foundCount++;
   }
   cout << simNumber << " random sequences: " << foundCount << " sequences found"
@@ -485,11 +481,22 @@ int suffix_tree::getSuffixTreeSize() { return suffixTreeSize(root); }
  * Constructor that read the file containing subject sequence
  */
 suffix_tree::suffix_tree(char *filepath) {
-  root = createNewNode(NULL, 0, 0);
+  root = createNewNode(NULL, -1, -1);
   subjectSequence = readSequenceFromFile(filepath);
   for (int x = 0; x < subjectLength + 1; x++) {
     insert(x);
   }
+}
+
+void suffix_tree::deallocateNode(SuffixTreeNode *root) {
+  if (root == NULL) return;
+  deallocateNode(root->A);
+  deallocateNode(root->C);
+  deallocateNode(root->G);
+  deallocateNode(root->T);
+  deallocateNode(root->DS);
+  root = NULL;
+  free(root);
 }
 
 /**
@@ -497,4 +504,4 @@ suffix_tree::suffix_tree(char *filepath) {
  * Destructor function that cleans up tree data structure and subject
  * sequence
  */
-suffix_tree::~suffix_tree() {}
+suffix_tree::~suffix_tree() { deallocateNode(root); }

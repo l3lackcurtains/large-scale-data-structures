@@ -37,13 +37,15 @@ class suffix_trie {
   struct SuffixTrieNode *createNewNode();
   int getSubjectLength(char *filePath);
   int suffixTrieSize(SuffixTrieNode *root);
+  void deallocateNode(SuffixTrieNode *root);
 
  public:
   suffix_trie(char *filepath);
+  suffix_trie(char *newSequence, int sequenceLength);
   ~suffix_trie();
   char *readSequenceFromFile(char *filePath);
   void insert(int start);
-  bool searchSequence(char *sequence);
+  bool searchSequence(char *sequence, int sequenceLength);
   void searchSequencesFromFile(char *filePath);
   char *generateRandomSequenceFromSubject();
   void generateAndSearchRandomSequences(int simNumber);

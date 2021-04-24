@@ -96,11 +96,10 @@ char *suffix_trie::readSequenceFromFile(char *filePath) {
  * * suffix_trie::fuzzySearch
  * Function that does the fuzzt search on the subject query
  */
-bool suffix_trie::searchSequence(char *sequence) {
-  //
+bool suffix_trie::searchSequence(char *sequence, int sequenceLength) {
   struct SuffixTrieNode *current = root;
   bool found = false;
-  for (int x = 0; x < SEQUENCE_LENGTH + 1; x++) {
+  for (int x = 0; x < sequenceLength + 1; x++) {
     if (sequence[x] == 'A' && current->A) {
       current = current->A;
     } else if (sequence[x] == 'C' && current->C) {
@@ -143,7 +142,7 @@ void suffix_trie::searchSequencesFromFile(char *filePath) {
   input.close();
   cout << "Searching from file." << endl;
   for (int x = 0; x < TEST_LENGTH; x++) {
-    bool found = searchSequence(testSequences[x]);
+    bool found = searchSequence(testSequences[x], SEQUENCE_LENGTH);
     cout << testSequences[x];
     if (found) {
       cout << " : FOUND" << endl;
@@ -171,7 +170,7 @@ void suffix_trie::generateAndSearchRandomSequences(int simNumber) {
   int foundCount = 0;
   for (int x = 0; x < simNumber; x++) {
     char *sequence = generateRandomSequenceFromSubject();
-    bool found = searchSequence(sequence);
+    bool found = searchSequence(sequence, SEQUENCE_LENGTH);
     if (found) foundCount++;
   }
   cout << simNumber << " random sequences: " << foundCount << " sequences found"
@@ -199,6 +198,7 @@ int suffix_trie::suffixTrieSize(SuffixTrieNode *root) {
 }
 
 int suffix_trie::getSuffixTrieSize() { return suffixTrieSize(root); }
+
 /**
  * * suffix_trie::suffix_trie
  * Constructor that read the file containing subject sequence
@@ -212,7 +212,29 @@ suffix_trie::suffix_trie(char *filepath) {
 }
 
 /**
+ * * suffix_trie::suffix_trie
+ * Constructor that read the file containing subject sequence
+ */
+suffix_trie::suffix_trie(char *newSequence, int sequenceLength) {
+  subjectSequence = subjectSequence;
+  subjectLength = sequenceLength;
+  for (int x = 0; x < subjectLength + 1; x++) {
+    insert(x);
+  }
+}
+
+void suffix_trie::deallocateNode(SuffixTrieNode *root) {
+  if (root == NULL) return;
+  deallocateNode(root->A);
+  deallocateNode(root->C);
+  deallocateNode(root->G);
+  deallocateNode(root->T);
+  deallocateNode(root->DS);
+  free(root);
+}
+
+/**
  * * suffix_trie::~suffix_trie
  * Destructor function that cleans up tree data structure and subject sequence
  */
-suffix_trie::~suffix_trie() {}
+suffix_trie::~suffix_trie() { deallocateNode(root); }
