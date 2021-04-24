@@ -1,8 +1,9 @@
 #include "./suffixTrie.h"
 
 /**
- * * suffix_trie::createNewNode
+ * * suffix_tree::createNewNode
  * Helper function to create a new node for the tree
+ * @return Returns a new SuffixTrieNode
  */
 struct SuffixTrieNode *suffix_trie::createNewNode() {
   struct SuffixTrieNode *newNode = NULL;
@@ -39,8 +40,8 @@ int suffix_trie::getSubjectLength(char *filePath) {
 
 /**
  * * suffix_trie::insert
- * Inserts the sequence in the suffix trie tree
- * @param sequence the genome sequence to be inserted in the tree
+ * Inserts the sequence in the suffix trie
+ * @param start The starting point of the subject sequence for insertion
  */
 void suffix_trie::insert(int start) {
   struct SuffixTrieNode *current = root;
@@ -93,8 +94,12 @@ char *suffix_trie::readSequenceFromFile(char *filePath) {
 }
 
 /**
- * * suffix_trie::fuzzySearch
- * Function that does the fuzzt search on the subject query
+ * * suffix_trie::searchSequence
+ * @param sequence Sequence that is to be searched
+ * @param sequenceLength The length of the sequence
+ * Function that takes the sequence and sequence length to search it on the
+ * suffix trie
+ * @returns If true, match is found on the suffix tree
  */
 bool suffix_trie::searchSequence(char *sequence, int sequenceLength) {
   struct SuffixTrieNode *current = root;
@@ -117,9 +122,13 @@ bool suffix_trie::searchSequence(char *sequence, int sequenceLength) {
   return found;
 }
 
+/**
+ * * suffix_trie::searchSequencesFromFile
+ * Function that takes the file containing fragments to search on the suffix
+ * trie
+ * @param filePath Takes the filepath that contains fragments to be searched
+ */
 void suffix_trie::searchSequencesFromFile(char *filePath) {
-  //
-
   char **testSequences = (char **)malloc(sizeof(char *) * TEST_LENGTH);
   for (int x = 0; x < TEST_LENGTH; x++) {
     testSequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH + 1);
@@ -152,6 +161,11 @@ void suffix_trie::searchSequencesFromFile(char *filePath) {
   }
 }
 
+/**
+ * * suffix_trie::generateRandomSequenceFromSubject
+ * Function that generates the random sequences from the subject
+ * @return The random sequence
+ */
 char *suffix_trie::generateRandomSequenceFromSubject() {
   char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH + 1);
   int randomNumber = rand() % (subjectLength - SEQUENCE_LENGTH);
@@ -162,6 +176,11 @@ char *suffix_trie::generateRandomSequenceFromSubject() {
   return sequence;
 }
 
+/**
+ * * suffix_trie::generateAndSearchRandomSequences
+ * Function that generates all the random sequences from the subject and search
+ * these sequences in the suffix trie
+ */
 void suffix_trie::generateAndSearchRandomSequences(int simNumber) {
   clock_t startTime, endTime;
   float totalTime = 0.0;
@@ -175,7 +194,6 @@ void suffix_trie::generateAndSearchRandomSequences(int simNumber) {
   }
   cout << simNumber << " random sequences: " << foundCount << " sequences found"
        << endl;
-
   /////////////////////////////////////////////////////
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
@@ -197,10 +215,16 @@ int suffix_trie::suffixTrieSize(SuffixTrieNode *root) {
            suffixTrieSize(root->G) + suffixTrieSize(root->T) + 1;
 }
 
+/**
+ * * suffix_trie::getSuffixTreeSize
+ * Public function to get the size of the suffix trie
+ * @return total number of non empty nodes
+ */
 int suffix_trie::getSuffixTrieSize() { return suffixTrieSize(root); }
 
 /**
  * * suffix_trie::suffix_trie
+ * @param filepath the filepath that is to be read
  * Constructor that read the file containing subject sequence
  */
 suffix_trie::suffix_trie(char *filepath) {
@@ -213,16 +237,25 @@ suffix_trie::suffix_trie(char *filepath) {
 
 /**
  * * suffix_trie::suffix_trie
- * Constructor that read the file containing subject sequence
+ * Constructor that read sequence and insert in the suffix trie
+ * @param newSequence The sequence that is to be read
+ * @param sequenceLength The length of the sequence
+
  */
 suffix_trie::suffix_trie(char *newSequence, int sequenceLength) {
-  subjectSequence = subjectSequence;
+  root = createNewNode();
+  subjectSequence = newSequence;
   subjectLength = sequenceLength;
   for (int x = 0; x < subjectLength + 1; x++) {
     insert(x);
   }
 }
 
+/**
+ * * suffix_trie::deallocateNode
+ * @param root the node that is to be deallocated
+ * Helper function to deallocate the memory of the suffix tree
+ */
 void suffix_trie::deallocateNode(SuffixTrieNode *root) {
   if (root == NULL) return;
   deallocateNode(root->A);
@@ -237,4 +270,7 @@ void suffix_trie::deallocateNode(SuffixTrieNode *root) {
  * * suffix_trie::~suffix_trie
  * Destructor function that cleans up tree data structure and subject sequence
  */
-suffix_trie::~suffix_trie() { deallocateNode(root); }
+suffix_trie::~suffix_trie() {
+  deallocateNode(root);
+  free(subjectSequence);
+}

@@ -3,6 +3,10 @@
 /**
  * * suffix_tree::createNewNode
  * Helper function to create a new node for the tree
+ * @param parent The parent node, used when splitting existing node
+ * @param offset the offset of the sequence in a node
+ * @param length the length of the sequence in a node
+ * @return Returns a new SuffixTreeNode
  */
 struct SuffixTreeNode *suffix_tree::createNewNode(SuffixTreeNode *parent,
                                                   int offset, int length) {
@@ -64,8 +68,8 @@ int suffix_tree::getSubjectLength(char *filePath) {
 
 /**
  * * suffix_tree::insert
- * Inserts the sequence in the suffix trie tree
- * @param sequence the genome sequence to be inserted in the tree
+ * Inserts the sequence in the suffix tree
+ * @param start The starting point of the subject sequence for insertion
  */
 void suffix_tree::insert(int start) {
   struct SuffixTreeNode *current = root;
@@ -87,9 +91,10 @@ void suffix_tree::insert(int start) {
 
       for (int x = offset; x < offset + length; x++) {
         if (subjectSequence[x] != subjectSequence[tempStart]) {
+          // Change the old Node
           current->A->length = x - offset;
 
-          // Check old
+          // Split the existing node
           if (subjectSequence[x] == 'A') {
             current->A->A = createNewNode(current->A, x, length - x + offset);
           } else if (subjectSequence[x] == 'C') {
@@ -102,7 +107,7 @@ void suffix_tree::insert(int start) {
             current->A->DS = createNewNode(NULL, -1, -1);
           }
 
-          // Insert New
+          // Create a new branch
           if (subjectSequence[tempStart] == 'A') {
             current->A->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
@@ -136,9 +141,10 @@ void suffix_tree::insert(int start) {
 
       for (int x = offset; x < offset + length; x++) {
         if (subjectSequence[x] != subjectSequence[tempStart]) {
+          // Change the old Node
           current->C->length = x - offset;
 
-          // Check old
+          // Split the existing node
           if (subjectSequence[x] == 'A') {
             current->C->A = createNewNode(current->C, x, length - x + offset);
           } else if (subjectSequence[x] == 'C') {
@@ -151,7 +157,7 @@ void suffix_tree::insert(int start) {
             current->C->DS = createNewNode(NULL, -1, -1);
           }
 
-          // Insert New
+          // Create a new branch
           if (subjectSequence[tempStart] == 'A') {
             current->C->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
@@ -185,9 +191,10 @@ void suffix_tree::insert(int start) {
 
       for (int x = offset; x < offset + length; x++) {
         if (subjectSequence[x] != subjectSequence[tempStart]) {
+          // Change the old Node
           current->G->length = x - offset;
 
-          // Check old
+          // Split the existing node
           if (subjectSequence[x] == 'A') {
             current->G->A = createNewNode(current->G, x, length - x + offset);
           } else if (subjectSequence[x] == 'C') {
@@ -200,7 +207,7 @@ void suffix_tree::insert(int start) {
             current->G->DS = createNewNode(NULL, -1, -1);
           }
 
-          // Insert New
+          // Create a new branch
           if (subjectSequence[tempStart] == 'A') {
             current->G->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
@@ -234,9 +241,10 @@ void suffix_tree::insert(int start) {
 
       for (int x = offset; x < offset + length; x++) {
         if (subjectSequence[x] != subjectSequence[tempStart]) {
+          // Change the old Node
           current->T->length = x - offset;
 
-          // Check old
+          // Split the existing node
           if (subjectSequence[x] == 'A') {
             current->T->A = createNewNode(current->T, x, length - x + offset);
           } else if (subjectSequence[x] == 'C') {
@@ -249,7 +257,7 @@ void suffix_tree::insert(int start) {
             current->T->DS = createNewNode(NULL, -1, -1);
           }
 
-          // Insert New
+          // Create a new branch
           if (subjectSequence[tempStart] == 'A') {
             current->T->A =
                 createNewNode(NULL, tempStart, subjectLength + 1 - tempStart);
@@ -308,8 +316,12 @@ char *suffix_tree::readSequenceFromFile(char *filePath) {
 }
 
 /**
- * * suffix_tree::fuzzySearch
- * Function that does the fuzzt search on the subject query
+ * * suffix_tree::searchSequence
+ * @param sequence Sequence that is to be searched
+ * @param sequenceLength The length of the sequence
+ * Function that takes the sequence and sequence length to search it on the
+ * suffix tree
+ * @returns If true, match is found on the suffix tree
  */
 bool suffix_tree::searchSequence(char *sequence, int sequenceLength) {
   //
@@ -395,9 +407,13 @@ bool suffix_tree::searchSequence(char *sequence, int sequenceLength) {
   return found;
 }
 
+/**
+ * * suffix_tree::searchSequencesFromFile
+ * Function that takes the file containing fragments to search on the suffix
+ * tree
+ * @param filePath Takes the filepath that contains fragments to be searched
+ */
 void suffix_tree::searchSequencesFromFile(char *filePath) {
-  //
-
   char **testSequences = (char **)malloc(sizeof(char *) * TEST_LENGTH);
   for (int x = 0; x < TEST_LENGTH; x++) {
     testSequences[x] = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH + 1);
@@ -418,6 +434,7 @@ void suffix_tree::searchSequencesFromFile(char *filePath) {
 
   delete[] tempHeader;
   input.close();
+
   cout << "Searching from file." << endl;
   for (int x = 0; x < TEST_LENGTH; x++) {
     bool found = searchSequence(testSequences[x], SEQUENCE_LENGTH);
@@ -430,6 +447,11 @@ void suffix_tree::searchSequencesFromFile(char *filePath) {
   }
 }
 
+/**
+ * * suffix_tree::generateRandomSequenceFromSubject
+ * Function that generates the random sequences from the subject
+ * @return The random sequence
+ */
 char *suffix_tree::generateRandomSequenceFromSubject() {
   char *sequence = (char *)malloc(sizeof(char) * SEQUENCE_LENGTH + 1);
   int randomNumber = rand() % (subjectLength - SEQUENCE_LENGTH);
@@ -440,6 +462,11 @@ char *suffix_tree::generateRandomSequenceFromSubject() {
   return sequence;
 }
 
+/**
+ * * suffix_tree::generateAndSearchRandomSequences
+ * Function that generates all the random sequences from the subject and search
+ * these sequences in the suffix tree
+ */
 void suffix_tree::generateAndSearchRandomSequences(int simNumber) {
   clock_t startTime, endTime;
   float totalTime = 0.0;
@@ -453,7 +480,6 @@ void suffix_tree::generateAndSearchRandomSequences(int simNumber) {
   }
   cout << simNumber << " random sequences: " << foundCount << " sequences found"
        << endl;
-
   /////////////////////////////////////////////////////
   endTime = clock();
   totalTime = (float)(endTime - startTime) / CLOCKS_PER_SEC;
@@ -463,7 +489,7 @@ void suffix_tree::generateAndSearchRandomSequences(int simNumber) {
 
 /**
  * * suffix_tree::suffixTreeSize
- * Helper function to get the size of the suffix trie tree
+ * Helper function to get the size of the suffix tree
  * @param root root node of the tree
  * @return total number of non empty nodes
  */
@@ -475,9 +501,16 @@ int suffix_tree::suffixTreeSize(SuffixTreeNode *root) {
            suffixTreeSize(root->G) + suffixTreeSize(root->T) + 1;
 }
 
+/**
+ * * suffix_tree::getSuffixTreeSize
+ * Public function to get the size of the suffix tree
+ * @return total number of non empty nodes
+ */
 int suffix_tree::getSuffixTreeSize() { return suffixTreeSize(root); }
+
 /**
  * * suffix_tree::suffix_tree
+ * @param filepath the filepath that is to be read
  * Constructor that read the file containing subject sequence
  */
 suffix_tree::suffix_tree(char *filepath) {
@@ -488,6 +521,27 @@ suffix_tree::suffix_tree(char *filepath) {
   }
 }
 
+/**
+ * * suffix_tree::suffix_tree
+ * Constructor that read sequence and insert in the suffix trie
+ * @param newSequence The sequence that is to be read
+ * @param sequenceLength The length of the sequence
+
+ */
+suffix_tree::suffix_tree(char *newSequence, int sequenceLength) {
+  root = createNewNode(NULL, -1, -1);
+  subjectSequence = newSequence;
+  subjectLength = sequenceLength;
+  for (int x = 0; x < subjectLength + 1; x++) {
+    insert(x);
+  }
+}
+
+/**
+ * * suffix_tree::deallocateNode
+ * @param root the node that is to be deallocated
+ * Helper function to deallocate the memory of the suffix tree
+ */
 void suffix_tree::deallocateNode(SuffixTreeNode *root) {
   if (root == NULL) return;
   deallocateNode(root->A);
@@ -504,4 +558,7 @@ void suffix_tree::deallocateNode(SuffixTreeNode *root) {
  * Destructor function that cleans up tree data structure and subject
  * sequence
  */
-suffix_tree::~suffix_tree() { deallocateNode(root); }
+suffix_tree::~suffix_tree() {
+  deallocateNode(root);
+  free(subjectSequence);
+}

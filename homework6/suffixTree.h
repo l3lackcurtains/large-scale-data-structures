@@ -14,7 +14,7 @@ using namespace std;
 
 /**
  * * SuffixTreeNode
- * Suffix Trie SuffixTreeNode
+ * Suffix Trie Node
  */
 struct SuffixTreeNode {
   int offset;
@@ -45,6 +45,7 @@ class suffix_tree {
 
  public:
   suffix_tree(char *filepath);
+  suffix_tree(char *newSequence, int sequenceLength);
   ~suffix_tree();
   void insert(int start);
   bool searchSequence(char *sequence, int sequenceLength);
