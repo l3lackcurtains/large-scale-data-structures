@@ -1,4 +1,4 @@
-## Large Scale Data Structure (INT 503, Northern Arizona University)
+## Large Scale Data Structures
 
 ### Module #1
 
